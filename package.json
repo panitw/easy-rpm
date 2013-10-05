@@ -1,0 +1,41 @@
+{
+  "name": "grunt-easy-rpm",
+  "description": "Easily create RPM package to install files/directories",
+  "version": "0.1.0",
+  "homepage": "https://github.com/panitw/easy-rpm",
+  "author": {
+    "name": "Panit Wechasil"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panitw/easy-rpm.git"
+  },
+  "bugs": {
+    "url": "https://github.com/panitw/easy-rpm/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/panitw/easy-rpm/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.1"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin"
+  ]
+}
