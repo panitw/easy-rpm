@@ -32,20 +32,14 @@ module.exports = function(grunt) {
     easy_rpm: {
       default_options: {
         options: {
+          release: 2,
+          keepTemp: true,
+          tempDir: "tmp"
         },
-        files: {
-          'tmp/default_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
-      custom_options: {
-        options: {
-          separator: ': ',
-          punctuation: ' !!!',
-        },
-        files: {
-          'tmp/custom_options': ['test/fixtures/testing', 'test/fixtures/123'],
-        },
-      },
+        files: [
+          {cwd:'test', src:['**'], dest:'/tmp/rpmtest2'}
+        ]
+      }
     },
 
     // Unit tests.
