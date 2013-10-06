@@ -76,7 +76,7 @@ module.exports = function(grunt) {
       version: "0.1.0",
       release: "1",
       license: "MIT",
-      vendor: "Ventor",
+      vendor: "Vendor",
       group: "Development/Tools",
       buildArch: "noarch",
       preInstallScript: [],
