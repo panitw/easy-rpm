@@ -195,5 +195,29 @@ grunt.initConfig({
 })
 ```
 
+#### Setting mode/owner/group of the target files
+In this example, the mode/owner/group of each target file can be set using mode/owner/group attribute of each file element
+
+```js
+grunt.initConfig({
+  easy_rpm: {
+    options: {
+      name: "mypackage",
+      version: "1.0.0",
+      release: "1",
+      buildArch: "x86_64"
+    },
+    release: {
+      files: [
+        {src: "output/file1.js", dest: "/target/dir", mode: "755"}, 
+        {src: "output/file2.js", dest: "/target/dir", mode: "o+x", owner: "mysql"},
+        {src: "output/file3.js", dest: "/target/dir", owner: "admin", group: "admin"},
+        {src: "output2/**", dest: "/target/dir", mode: "644"}, //Works with wildcard as well
+      ]
+    },
+  },
+})
+```
+
 ## Release History
 0.1.0  First usable version 
