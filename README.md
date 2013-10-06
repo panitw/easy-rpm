@@ -131,7 +131,7 @@ A boolean value to tell the script to keep the temp folder after the package is 
 
 #### Basic Usage
 In this example, the default options are used for most of the fields. Each file are copied indivitually. The directory structure will be preserved. 
-*It is important that 'files' group has to resides in a target*. The example below is the target named 'release'
+**It is important that 'files' group has to resides in a target**. The example below is the target named 'release'
 
 ```js
 grunt.initConfig({
