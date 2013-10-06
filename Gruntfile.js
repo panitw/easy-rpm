@@ -32,7 +32,9 @@ module.exports = function(grunt) {
     easy_rpm: {
       default_options: {
         options: {
+          version: "v1.0.0",
           release: 5,
+          buildArch: "x86_64",
           keepTemp: true,
           tempDir: "tmp"
         },

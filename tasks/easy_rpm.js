@@ -13,7 +13,7 @@ var path = require("path");
 
 function writeSpecFile(grunt, files, options) {
 
-    var pkgName = options.name+"-v"+options.version+"-"+options.buildArch;
+    var pkgName = options.name+"-"+options.version+"-"+options.buildArch;
     var specFilepath = path.join(options.tempDir, "SPECS", pkgName+".spec");
 
     var b = [];
@@ -178,6 +178,12 @@ module.exports = function(grunt) {
         }, callback);
       },
       function(callback) {
+        //Copy the build output to the current directory
+        var outputFilename = options.name+"-"+options.version+"-"+options.release+"."+options.buildArch+".rpm";
+        var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
+        grunt.log.writeln("Copy output RPM package to the current directory: "+outputFilepath);
+        grunt.file.copy(outputFilepath,"./"+outputFilename);
+
         //Delete temp folder
         if (!options.keepTemp) {
           grunt.log.writeln("Deleting tmp folder "+tmpDir);
