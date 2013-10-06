@@ -183,6 +183,7 @@ grunt.initConfig({
 ```
 #### Dynamically generate the file list using wildcard
 In this example, the file list will be generated automatically. Files that the path match the wildcard will be included.
+The file list is generated using node-glob so please find more info about the wildcard pattern at [node-glob](https://github.com/isaacs/node-glob)
 
 ```js
 grunt.initConfig({
