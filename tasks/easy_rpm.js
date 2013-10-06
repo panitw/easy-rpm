@@ -87,7 +87,6 @@ module.exports = function(grunt) {
       keepTemp: false
     });
 
-    //Create RPM build folder structure
     var tmpDir = path.resolve(options.tempDir);
     var buildRoot = tmpDir + "/BUILDROOT/";
     var rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"];
@@ -98,13 +97,14 @@ module.exports = function(grunt) {
       grunt.file.delete(tmpDir);
     }
 
-    grunt.log.writeln("Creating RPM folder structure at "+tmpDir);
-    
+    //Create RPM build folder structure
+    grunt.log.writeln("Creating RPM folder structure at "+tmpDir);    
     for (var i=0;i<rpmStructure.length;i++) {
       grunt.file.mkdir(tmpDir+"/"+rpmStructure[i]);
     }
 
     //Copy source to the BUILDROOT folder
+    grunt.log.writeln("Copying files to tmp directory");
     var fileBasket = [];    
     this.files.forEach(function(file) {
       
@@ -129,16 +129,37 @@ module.exports = function(grunt) {
           var copyTargetPath = path.join(buildRoot, file.dest, srcPath);
           grunt.file.copy(actualSrcPath, copyTargetPath);
 
+          //Generate actualTargetPath and save to filebasket for later use
           var actualTargetPath = path.join(file.dest, srcPath);
           fileBasket.push(actualTargetPath);
+
+          //If "mode" property is defined, then add the post install script to change
+          //the mode of the file
+          if (file.mode) {
+            options.postInstallScript.push("chmod "+file.mode+" "+actualTargetPath);
+          }
+
+          //If "owner" property is defined, then add the post install script to change
+          //the owner of the file
+          if (file.owner) {
+            options.postInstallScript.push("chown "+file.owner+" "+actualTargetPath);
+          }
+
+          //If "group" property is defined, then add the post install script to change
+          //the group of the file
+          if (file.group) {
+            options.postInstallScript.push("chgrp "+file.group+" "+actualTargetPath);
+          }
         }
       });
     });
 
     //Generate SPEC file
+    grunt.log.writeln("Generating RPM spec file");
     var specFilepath = writeSpecFile(grunt, fileBasket, options);
 
     //Build RPM
+    grunt.log.writeln("Building RPM package");
     grunt.util.async.series([
       
       //spawn rpmbuilt tool
@@ -150,7 +171,7 @@ module.exports = function(grunt) {
           buildRoot,
           specFilepath
         ];
-        grunt.log.writeln("Execute Cmd: "+buildCmd+" "+buildArgs.join(" "));
+        grunt.log.writeln("Execute: "+buildCmd+" "+buildArgs.join(" "));
         grunt.util.spawn({
           cmd: buildCmd,
           args: buildArgs,

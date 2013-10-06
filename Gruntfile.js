@@ -32,12 +32,12 @@ module.exports = function(grunt) {
     easy_rpm: {
       default_options: {
         options: {
-          release: 2,
+          release: 5,
           keepTemp: true,
           tempDir: "tmp"
         },
         files: [
-          {cwd:'test', src:['**'], dest:'/tmp/rpmtest2'}
+          {cwd:'test', src:['**'], dest:'/tmp/rpmtest5', mode: '755', owner: "rpmbuilder", group: "rpmbuilder"}
         ]
       }
     },
