@@ -35,7 +35,6 @@ module.exports = function(grunt) {
           version: "v1.0.0",
           release: 5,
           buildArch: "x86_64",
-          keepTemp: true,
           tempDir: "tmp"
         },
         files: [
