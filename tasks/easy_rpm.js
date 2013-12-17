@@ -26,6 +26,11 @@ function writeSpecFile(grunt, files, options) {
     b.push("Summary: "+options.summary);
     b.push("License: "+options.license);
     b.push("BuildArch: "+options.buildArch);
+
+    if (options.dependencies.length > 0) {
+      b.push("Requires: "+ options.dependencies.join(","));
+    }
+
     b.push("");
     b.push("%description");
     b.push(options.description);
@@ -79,6 +84,7 @@ module.exports = function(grunt) {
       vendor: "Vendor",
       group: "Development/Tools",
       buildArch: "noarch",
+      dependencies: [],
       preInstallScript: [],
       postInstallScript: [],
       preUninstallScript: [],
@@ -90,7 +96,7 @@ module.exports = function(grunt) {
     var tmpDir = path.resolve(options.tempDir);
     var buildRoot = tmpDir + "/BUILDROOT/";
     var rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"];
-    
+
     //If the tmpDir exists (probably from previous build), delete it first
     if (grunt.file.exists(tmpDir)) {
       grunt.log.writeln("Deleting old tmp dir");
@@ -98,16 +104,16 @@ module.exports = function(grunt) {
     }
 
     //Create RPM build folder structure
-    grunt.log.writeln("Creating RPM folder structure at "+tmpDir);    
+    grunt.log.writeln("Creating RPM folder structure at "+tmpDir);
     for (var i=0;i<rpmStructure.length;i++) {
       grunt.file.mkdir(tmpDir+"/"+rpmStructure[i]);
     }
 
     //Copy source to the BUILDROOT folder
     grunt.log.writeln("Copying files to tmp directory");
-    var fileBasket = [];    
+    var fileBasket = [];
     this.files.forEach(function(file) {
-      
+
       //All file entry should have both "src" and "dest"
       if (!file.src || !file.dest) {
         grunt.log.error("All file entries must have both 'src' and 'dest' property");
@@ -116,7 +122,7 @@ module.exports = function(grunt) {
 
       file.src.filter(function(srcPath) {
         var actualSrcPath = srcPath;
-        
+
         //If the CWD option is specified, look for each file from CWD path
         if (file.cwd) {
           actualSrcPath = path.join(file.cwd, srcPath);
@@ -161,7 +167,7 @@ module.exports = function(grunt) {
     //Build RPM
     grunt.log.writeln("Building RPM package");
     grunt.util.async.series([
-      
+
       //spawn rpmbuilt tool
       function(callback) {
         var buildCmd = "rpmbuild";
@@ -189,7 +195,7 @@ module.exports = function(grunt) {
           grunt.log.writeln("Deleting tmp folder "+tmpDir);
           grunt.file.delete(tmpDir);
         }
-      }     
+      }
     ],
     function (err) {
       if (!err) {
