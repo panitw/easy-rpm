@@ -26,6 +26,11 @@ function writeSpecFile(grunt, files, options) {
     b.push("Summary: "+options.summary);
     b.push("License: "+options.license);
     b.push("BuildArch: "+options.buildArch);
+
+    if (options.dependencies.length > 0) {
+      b.push("Requires: "+ options.dependencies.join(","));
+    }
+
     b.push("");
     b.push("%description");
     b.push(options.description);
@@ -79,6 +84,7 @@ module.exports = function(grunt) {
       vendor: "Vendor",
       group: "Development/Tools",
       buildArch: "noarch",
+      dependencies: [],
       preInstallScript: [],
       postInstallScript: [],
       preUninstallScript: [],

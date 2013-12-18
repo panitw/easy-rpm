@@ -97,6 +97,12 @@ Default value: `'noarch'`
 
 A string value that is used to set specify the target architecture of your RPM package. . It will also be used at the rpm file name
 
+#### options.dependencies
+Type: `Array<String>`
+Default value: `[]`
+
+An array of required packages, that should be installed before(e.g. `["nodejs >= 0.10.22"]`). Is mapped to `Requires` property in spec file.
+
 #### options.preInstallScript
 Type: `Array<String>`
 Default value: `[]`
@@ -136,7 +142,7 @@ A boolean value to tell the script to keep the temp folder after the package is 
 ### Usage Examples
 
 #### Basic Usage
-In this example, the default options are used for most of the fields. Each file are copied indivitually. The directory structure will be preserved. 
+In this example, the default options are used for most of the fields. Each file are copied indivitually. The directory structure will be preserved.
 **It is important that 'files' group has to resides in a target**. The example below is the target named 'release'
 
 ```js
@@ -217,7 +223,7 @@ grunt.initConfig({
     },
     release: {
       files: [
-        {src: "output/file1.js", dest: "/target/dir", mode: "755"}, 
+        {src: "output/file1.js", dest: "/target/dir", mode: "755"},
         {src: "output/file2.js", dest: "/target/dir", mode: "o+x", owner: "mysql"},
         {src: "output/file3.js", dest: "/target/dir", owner: "admin", group: "admin"},
         {src: "output2/**", dest: "/target/dir", mode: "644"}, //Works with wildcard as well
@@ -228,4 +234,4 @@ grunt.initConfig({
 ```
 
 ## Release History
-0.1.0  First usable version 
+0.1.0  First usable version
