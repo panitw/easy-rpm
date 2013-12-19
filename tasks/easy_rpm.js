@@ -24,6 +24,7 @@ function writeSpecFile(grunt, files, options) {
     b.push("Version: "+options.version);
     b.push("Release: "+options.release);
     b.push("Summary: "+options.summary);
+    b.push("Group: "+options.group);
     b.push("License: "+options.license);
     b.push("BuildArch: "+options.buildArch);
 
