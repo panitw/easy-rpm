@@ -142,19 +142,19 @@ module.exports = function(grunt) {
           //If "mode" property is defined, then add the post install script to change
           //the mode of the file
           if (file.mode) {
-            options.postInstallScript.push("chmod "+file.mode+" "+actualTargetPath);
+            options.postInstallScript.push("chmod "+file.mode+" '"+actualTargetPath+"'");
           }
 
           //If "owner" property is defined, then add the post install script to change
           //the owner of the file
           if (file.owner) {
-            options.postInstallScript.push("chown "+file.owner+" "+actualTargetPath);
+            options.postInstallScript.push("chown "+file.owner+" '"+actualTargetPath+"'");
           }
 
           //If "group" property is defined, then add the post install script to change
           //the group of the file
           if (file.group) {
-            options.postInstallScript.push("chgrp "+file.group+" "+actualTargetPath);
+            options.postInstallScript.push("chgrp "+file.group+" '"+actualTargetPath+"'");
           }
         }
       });
