@@ -1,4 +1,4 @@
-usy-rpm
+# grunt-easy-rpm
 
 > Easily create RPM package to install files/directories
 
