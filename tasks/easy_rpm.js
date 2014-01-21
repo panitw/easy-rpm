@@ -1,4 +1,4 @@
-usy-rpm
+/*
  * https://github.com/panitw/easy-rpm
  *
  * Copyright (c) 2013 Panit Wechasil
