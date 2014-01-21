@@ -1,4 +1,4 @@
-# grunt-easy-rpm
+usy-rpm
 
 > Easily create RPM package to install files/directories
 
@@ -133,6 +133,14 @@ Default value: `'tmp-'+<auto_gen_id>`
 
 A string value that will be use as the temporary path name to store the structure that is required by the `rpmbuild` command.
 
+#### options.postPackageCreate
+Type: `String` | `function(rpmPath, rpmFilename)`
+Default value: `null`
+
+A string value will tell the script where to copy the rpm after it has been created.
+
+A function will be passed the rpmPath and the rpmFilename of the package that has been created.
+
 #### options.keepTemp
 Type: `Boolean`
 Default value: `false`
@@ -232,4 +240,3 @@ grunt.initConfig({
   },
 })
 ```
-
