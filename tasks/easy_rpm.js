@@ -1,5 +1,4 @@
-/*
- * grunt-easy-rpm
+usy-rpm
  * https://github.com/panitw/easy-rpm
  *
  * Copyright (c) 2013 Panit Wechasil
@@ -8,27 +7,27 @@
 
 'use strict';
 
-var shortid = require("shortid");
-var path = require("path");
+var shortid = require("shortid"),
+  path = require("path");
 
 function writeSpecFile(grunt, files, options) {
 
-    var pkgName = options.name+"-"+options.version+"-"+options.buildArch;
-    var specFilepath = path.join(options.tempDir, "SPECS", pkgName+".spec");
-
-    var b = [];
-    var i = 0;
-    b.push("%define   _topdir "+path.resolve(options.tempDir));
+    var pkgName = options.name + "-" + options.version + "-" + options.buildArch,
+      specFilepath = path.join(options.tempDir, "SPECS", pkgName + ".spec"),
+      b = [],
+      i = 0;
+    
+    b.push("%define   _topdir " + path.resolve(options.tempDir));
     b.push("");
-    b.push("Name: "+options.name);
-    b.push("Version: "+options.version);
-    b.push("Release: "+options.release);
-    b.push("Summary: "+options.summary);
-    b.push("License: "+options.license);
-    b.push("BuildArch: "+options.buildArch);
+    b.push("Name: " + options.name);
+    b.push("Version: " + options.version);
+    b.push("Release: " + options.release);
+    b.push("Summary: " + options.summary);
+    b.push("License: " + options.license);
+    b.push("BuildArch: " + options.buildArch);
 
     if (options.dependencies.length > 0) {
-      b.push("Requires: "+ options.dependencies.join(","));
+      b.push("Requires: " + options.dependencies.join(","));
     }
 
     b.push("");
@@ -36,27 +35,27 @@ function writeSpecFile(grunt, files, options) {
     b.push(options.description);
     b.push("");
     b.push("%files");
-    for (i=0;i<files.length;i++) {
-      b.push("\""+files[i]+"\"");
+    for (i=0; i<files.length; i++) {
+      b.push("\"" + files[i] + "\"");
     }
     b.push("");
     b.push("%pre");
-    for (i=0;i<options.preInstallScript.length;i++) {
+    for (i=0; i<options.preInstallScript.length; i++) {
       b.push(options.preInstallScript[i]);
     }
     b.push("");
     b.push("%post");
-    for (i=0;i<options.postInstallScript.length;i++) {
+    for (i=0; i<options.postInstallScript.length; i++) {
       b.push(options.postInstallScript[i]);
     }
     b.push("");
     b.push("%preun");
-    for (i=0;i<options.preUninstallScript.length;i++) {
+    for (i=0; i<options.preUninstallScript.length; i++) {
       b.push(options.preUninstallScript[i]);
     }
     b.push("");
     b.push("%postun");
-    for (i=0;i<options.postUninstallScript.length;i++) {
+    for (i=0; i<options.postUninstallScript.length; i++) {
       b.push(options.postUninstallScript[i]);
     }
 
@@ -71,31 +70,28 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask("easy_rpm", "Easily create RPM package to install files/directories", function() {
 
-    var done = this.async();
-
-    // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
-      name: "noname",
-      summary: "No Summary",
-      description: "No Description",
-      version: "0.1.0",
-      release: "1",
-      license: "MIT",
-      vendor: "Vendor",
-      group: "Development/Tools",
-      buildArch: "noarch",
-      dependencies: [],
-      preInstallScript: [],
-      postInstallScript: [],
-      preUninstallScript: [],
-      postUninstallScript: [],
-      tempDir: "tmp-"+shortid.generate(),
-      keepTemp: false
-    });
-
-    var tmpDir = path.resolve(options.tempDir);
-    var buildRoot = tmpDir + "/BUILDROOT/";
-    var rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"];
+        name: "noname",
+        summary: "No Summary",
+        description: "No Description",
+        version: "0.1.0",
+        release: "1",
+        license: "MIT",
+        vendor: "Vendor",
+        group: "Development/Tools",
+        buildArch: "noarch",
+        dependencies: [],
+        preInstallScript: [],
+        postInstallScript: [],
+        preUninstallScript: [],
+        postUninstallScript: [],
+        tempDir: "tmp-"+shortid.generate(),
+        postPackageCreate: null,
+        keepTemp: false}),
+      done = this.async(),
+      tmpDir = path.resolve(options.tempDir),
+      buildRoot = tmpDir + "/BUILDROOT/",
+      rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"];
 
     //If the tmpDir exists (probably from previous build), delete it first
     if (grunt.file.exists(tmpDir)) {
@@ -184,17 +180,32 @@ module.exports = function(grunt) {
         }, callback);
       },
       function(callback) {
-        //Copy the build output to the current directory
-        var outputFilename = options.name+"-"+options.version+"-"+options.release+"."+options.buildArch+".rpm";
-        var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
-        grunt.log.writeln("Copy output RPM package to the current directory: "+outputFilepath);
-        grunt.file.copy(outputFilepath,"./"+outputFilename);
+        if (options.postPackageCreate){
+          var rpmFilename = options.name + "-" + options.version + "-" + options.release + "." + options.buildArch + ".rpm",
+            rpmPath = path.join(tmpDir, "RPMS", options.buildArch),
+            destinationFile;
+
+          if (typeof options.postPackageCreate === "string"){
+            if (grunt.file.isDir(options.postPackageCreate)){
+              destinationFile = path.join(options.postPackageCreate, rpmFilename);
+              grunt.file.copy(path.join(rpmFilename,rpmFilename) , destinationFile);
+              grunt.log.writeln("Copied output RPM package to: " + destinationFile);
+            }
+            else {
+              grunt.fail.warn('Destination path is not a directory');
+            }
+          }
+          else if (typeof options.postPackageCreate === "function"){
+            options.postPackageCreate(rpmPath, rpmFilename);
+          }
+        }
 
         //Delete temp folder
         if (!options.keepTemp) {
-          grunt.log.writeln("Deleting tmp folder "+tmpDir);
+          grunt.log.writeln("Deleting tmp folder " + tmpDir);
           grunt.file.delete(tmpDir);
         }
+        callback();
       }
     ],
     function (err) {
@@ -205,7 +216,5 @@ module.exports = function(grunt) {
         done(false);
       }
     });
-
   });
 };
-
