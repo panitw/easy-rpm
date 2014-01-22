@@ -108,7 +108,7 @@ module.exports = function (grunt) {
             test: {}
         });
 
-        console.dir(options);
+        //console.dir(options);
 
         var tmpDir = path.resolve(options.tempDir);
         var buildRoot = tmpDir + "/BUILDROOT/";
