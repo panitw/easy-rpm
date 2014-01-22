@@ -184,7 +184,7 @@ module.exports = function(grunt) {
         grunt.log.writeln("Execute: "+buildCmd+" "+buildArgs.join(" "));
         grunt.util.spawn({
           cmd: buildCmd,
-          args: buildArgs,
+          args: buildArgs
         }, callback);
       },
       function(callback) {
