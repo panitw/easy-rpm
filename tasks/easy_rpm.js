@@ -37,7 +37,7 @@ function writeSpecFile(grunt, files, options) {
     b.push("");
     b.push("%files");
     for (i=0;i<options.defattrScript.length;i++) {
-        b.push("%defattr: " + options.defattrScript[i]);
+        b.push("%defattr " + options.defattrScript[i]);
     }
     for (i=0;i<files.length;i++) {
       b.push("\""+files[i]+"\"");
