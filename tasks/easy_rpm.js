@@ -38,11 +38,11 @@ function writeSpecFile(grunt, files, options) {
     b.push("%files");
     for (i=0;i<options.defattrScript.length;i++) {
         var defattr = options.defattrScript[i];
-        b.push("%defattr(");
-        b.push((defattr.fileMode ? defattr.fileMode : '-') + ', ');
-        b.push((defattr.user ? defattr.user : '-') + ', ');
-        b.push((defattr.group ? defattr.group: '-') + ', ');
-        b.push((defattr.dirMode ? defattr.dirMode: '-') + ')');
+        b.push("%defattr("
+            + (defattr.fileMode ? defattr.fileMode : '-') + ', '
+            + (defattr.user ? defattr.user : '-') + ', '
+            + (defattr.group ? defattr.group: '-') + ', '
+            + (defattr.dirMode ? defattr.dirMode: '-') + ')');
     }
     for (i=0;i<files.length;i++) {
       b.push("\""+files[i]+"\"");
