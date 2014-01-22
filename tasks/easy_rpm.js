@@ -37,7 +37,7 @@ function writeSpecFile(grunt, files, options) {
     b.push("");
     b.push("%files");
     for (i=0;i<options.defattrScript.length;i++) {
-        b.push("\""+options.defattrScript[i]+"\"");
+        b.push("%defattr: " + options.defattrScript[i]);
     }
     for (i=0;i<files.length;i++) {
       b.push("\""+files[i]+"\"");
@@ -94,8 +94,11 @@ module.exports = function(grunt) {
       postUninstallScript: [],
       defattrScript: [],
       tempDir: "tmp-"+shortid.generate(),
-      keepTemp: false
+      keepTemp: false,
+      test: {}
     });
+
+    console.dir(options);
 
     var tmpDir = path.resolve(options.tempDir);
     var buildRoot = tmpDir + "/BUILDROOT/";
