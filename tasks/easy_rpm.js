@@ -36,6 +36,9 @@ function writeSpecFile(grunt, files, options) {
     b.push(options.description);
     b.push("");
     b.push("%files");
+    for (i=0;i<options.defattrScript.length;i++) {
+        b.push("\""+options.defattrScript[i]+"\"");
+    }
     for (i=0;i<files.length;i++) {
       b.push("\""+files[i]+"\"");
     }
@@ -89,6 +92,7 @@ module.exports = function(grunt) {
       postInstallScript: [],
       preUninstallScript: [],
       postUninstallScript: [],
+      defattrScript: [],
       tempDir: "tmp-"+shortid.generate(),
       keepTemp: false
     });
@@ -141,21 +145,21 @@ module.exports = function(grunt) {
 
           //If "mode" property is defined, then add the post install script to change
           //the mode of the file
-          if (file.mode) {
-            options.postInstallScript.push("chmod "+file.mode+" '"+actualTargetPath+"'");
-          }
+          //if (file.mode) {
+          //  options.postInstallScript.push("chmod "+file.mode+" '"+actualTargetPath+"'");
+          //}
 
           //If "owner" property is defined, then add the post install script to change
           //the owner of the file
-          if (file.owner) {
-            options.postInstallScript.push("chown "+file.owner+" '"+actualTargetPath+"'");
-          }
+          //if (file.owner) {
+          //  options.postInstallScript.push("chown "+file.owner+" '"+actualTargetPath+"'");
+          //}
 
           //If "group" property is defined, then add the post install script to change
           //the group of the file
-          if (file.group) {
-            options.postInstallScript.push("chgrp "+file.group+" '"+actualTargetPath+"'");
-          }
+          //if (file.group) {
+          //  options.postInstallScript.push("chgrp "+file.group+" '"+actualTargetPath+"'");
+          //}
         }
       });
     });
