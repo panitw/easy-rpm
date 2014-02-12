@@ -109,8 +109,8 @@ module.exports = function(grunt) {
       grunt.file.mkdir(tmpDir+"/"+rpmStructure[i]);
     }
 
-	//Files to exclude
-	var filesToExclude = [];
+    //Files to exclude
+    var filesToExclude = [];
     if (this.data.excludeFiles) {
       filesToExclude = grunt.file.expand(this.data.excludeFiles).map(function (fileName) {
         return path.normalize(fileName);
