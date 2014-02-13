@@ -233,3 +233,29 @@ grunt.initConfig({
 })
 ```
 
+#### Exclude files from the rpm
+To exlude files from the file list assign an array to the "excludeFiles" attribute. You may set multiple filters in the shape of glob wildcard patterns. Note that the filter patterns is applied to the source path of a file.
+
+```js
+grunt.initConfig({
+  easy_rpm: {
+    options: {
+      name: "mypackage",
+      version: "1.0.0",
+      release: "1",
+      buildArch: "x86_64"
+    },
+    release: {
+      files: [
+        {src: "routes/**/*", dest: "/target/dir"},
+        {src: "views/**/*", dest: "/target/dir"}
+      ],
+      excludeFiles: {
+      	"**/index.html",
+	"routes/fileA.js"
+      }
+    },
+  },
+})
+```
+
