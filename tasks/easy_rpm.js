@@ -195,6 +195,7 @@ module.exports = function(grunt) {
           grunt.log.writeln("Deleting tmp folder "+tmpDir);
           grunt.file.delete(tmpDir);
         }
+        callback();
       }
     ],
     function (err) {
