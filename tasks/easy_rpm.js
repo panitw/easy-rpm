@@ -90,6 +90,7 @@ module.exports = function(grunt) {
       preUninstallScript: [],
       postUninstallScript: [],
       tempDir: "tmp-"+shortid.generate(),
+      rpmDestination: ".",
       keepTemp: false
     });
 
@@ -188,7 +189,9 @@ module.exports = function(grunt) {
         var outputFilename = options.name+"-"+options.version+"-"+options.release+"."+options.buildArch+".rpm";
         var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
         grunt.log.writeln("Copy output RPM package to the current directory: "+outputFilepath);
-        grunt.file.copy(outputFilepath,"./"+outputFilename);
+
+        var rpmDestination = path.resolve(options.rpmDestination);
+        grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
 
         //Delete temp folder
         if (!options.keepTemp) {
