@@ -139,6 +139,12 @@ Default value: `false`
 
 A boolean value to tell the script to keep the temp folder after the package is built. Probably can be used for problem investigation.
 
+#### options.rpmDestination
+Type: `string`
+Default value: `.`
+
+Location where the resulting RPM should be put, `.` by default.
+
 ### Usage Examples
 
 #### Basic Usage
