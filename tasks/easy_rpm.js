@@ -168,24 +168,23 @@ module.exports = function(grunt) {
 
     //Build RPM
     grunt.log.writeln("Building RPM package");
-    grunt.util.async.series([
 
-      //spawn rpmbuilt tool
-      function(callback) {
-        var buildCmd = "rpmbuild";
-        var buildArgs = [
-          "-bb",
-          "--buildroot",
-          buildRoot,
-          specFilepath
-        ];
-        grunt.log.writeln("Execute: "+buildCmd+" "+buildArgs.join(" "));
-        grunt.util.spawn({
-          cmd: buildCmd,
-          args: buildArgs,
-        }, callback);
-      },
-      function(callback) {
+    //spawn rpmbuilt tool
+    var buildCmd = "rpmbuild";
+    var buildArgs = [
+      "-bb",
+      "--buildroot",
+      buildRoot,
+      specFilepath
+    ];
+
+    grunt.log.writeln("Execute: "+buildCmd+" "+buildArgs.join(" "));
+
+    grunt.util.spawn({
+      cmd: buildCmd,
+      args: buildArgs,
+    }, function(error, result, code) {
+      if (!error) {
         //Copy the build output to the current directory
         var outputFilename = options.name+"-"+options.version+"-"+options.release+"."+options.buildArch+".rpm";
         var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
@@ -193,23 +192,21 @@ module.exports = function(grunt) {
 
         var rpmDestination = path.resolve(options.rpmDestination);
         grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
+      }
 
-        //Delete temp folder
-        if (!options.keepTemp) {
-          grunt.log.writeln("Deleting tmp folder "+tmpDir);
-          grunt.file.delete(tmpDir);
-        }
+      //Delete temp folder
+      if (!options.keepTemp) {
+        grunt.log.writeln("Deleting tmp folder "+tmpDir);
+        grunt.file.delete(tmpDir);
       }
-    ],
-    function (err) {
-      if (!err) {
-        done();
-      } else {
-        grunt.log.error(err);
-        done(false);
+
+      if (error) {
+        grunt.log.error(result);
+        grunt.warn("Failed while building RPM", code);
       }
+
+      done();
     });
-
   });
 };
 
