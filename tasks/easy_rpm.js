@@ -117,6 +117,14 @@ module.exports = function(grunt) {
       grunt.file.mkdir(tmpDir+"/"+rpmStructure[i]);
     }
 
+    //Files to exclude
+    var filesToExclude = [];
+    if (this.data.excludeFiles) {
+      filesToExclude = grunt.file.expand(this.data.excludeFiles).map(function (fileName) {
+        return path.normalize(fileName);
+      });
+    }
+
     //Copy source to the BUILDROOT folder
     grunt.log.writeln("Copying files to tmp directory");
     var fileBasket = [];
@@ -130,6 +138,11 @@ module.exports = function(grunt) {
 
       file.src.filter(function(srcPath) {
         var actualSrcPath = srcPath;
+
+        //check whether to ignore this file        
+        if (filesToExclude.indexOf(actualSrcPath) >= 0) {
+          return false;
+        }
 
         //If the CWD option is specified, look for each file from CWD path
         if (file.cwd) {

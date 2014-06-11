@@ -247,6 +247,7 @@ grunt.initConfig({
 })
 ```
 
+<<<<<<< HEAD
 #### Setting %doc or %config of the target files
 In this example, the %doc or %config flag of each target file can be set
 
@@ -269,3 +270,29 @@ grunt.initConfig({
   },
 })
 ```
+
+#### Exclude files from the rpm
+To exlude files from the file list assign an array to the "excludeFiles" attribute. You may set multiple filters in the shape of glob wildcard patterns. Note that the filter patterns are applied to the source path of a file.
+>>>>>>> e1157f067ab654d2c6479ec0f324d07521ee749e
+
+```js
+grunt.initConfig({
+  easy_rpm: {
+    options: {
+      name: "mypackage",
+      version: "1.0.0",
+      release: "1",
+      buildArch: "x86_64"
+    },
+    release: {
+      files: [
+        {src: "routes/**/*", dest: "/target/dir"},
+        {src: "views/**/*", dest: "/target/dir"}
+      ],
+      excludeFiles: {
+        "**/index.html",
+        "routes/fileA.js"
+      }
+    },
+  },
+})
