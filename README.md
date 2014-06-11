@@ -272,7 +272,6 @@ grunt.initConfig({
 
 #### Exclude files from the rpm
 To exlude files from the file list assign an array to the "excludeFiles" attribute. You may set multiple filters in the shape of glob wildcard patterns. Note that the filter patterns are applied to the source path of a file.
->>>>>>> e1157f067ab654d2c6479ec0f324d07521ee749e
 
 ```js
 grunt.initConfig({
