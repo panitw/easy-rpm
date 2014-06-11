@@ -171,8 +171,8 @@ grunt.initConfig({
 })
 ```
 
-#### Using CWD attribute (current working director)
-In this example, Each file are copied indivitually. The "cwd" attribute is used to pick up the file in the "cwd", the directory structure `under` "cwd" is preserved
+#### Using CWD attribute (current working directory)
+In this example, Each file are copied individually. The "cwd" attribute is used to pick up the file in the "cwd", the directory structure `under` "cwd" is preserved
 
 ```js
 grunt.initConfig({
@@ -233,6 +233,29 @@ grunt.initConfig({
         {src: "output/file2.js", dest: "/target/dir", mode: "o+x", owner: "mysql"},
         {src: "output/file3.js", dest: "/target/dir", owner: "admin", group: "admin"},
         {src: "output2/**", dest: "/target/dir", mode: "644"}, //Works with wildcard as well
+      ]
+    },
+  },
+})
+```
+
+#### Setting %doc or %config of the target files
+In this example, the %doc or %config flag of each target file can be set
+
+```js
+grunt.initConfig({
+  easy_rpm: {
+    options: {
+      name: "mypackage",
+      version: "1.0.0",
+      release: "1",
+      buildArch: "x86_64"
+    },
+    release: {
+      files: [
+        {src: "output/file1.js", dest: "/target/dir", mode: "755"},
+        {doc:'true', cwd:'output', src: "README", dest: "/target/dir", mode: "o+x", owner: "mysql"},
+        {config:'true', cwd:'output', src: "mypackage.conf", dest: "/etc/mypackage", owner: "admin", group: "admin"}
       ]
     },
   },

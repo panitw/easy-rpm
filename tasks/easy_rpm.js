@@ -23,6 +23,7 @@ function writeSpecFile(grunt, files, options) {
     b.push("Name: "+options.name);
     b.push("Version: "+options.version);
     b.push("Release: "+options.release);
+    b.push("Group: "+options.group);
     b.push("Summary: "+options.summary);
     b.push("Group: "+options.group);
     b.push("License: "+options.license);
@@ -38,7 +39,7 @@ function writeSpecFile(grunt, files, options) {
     b.push("");
     b.push("%files");
     for (i=0;i<files.length;i++) {
-      b.push("\""+files[i]+"\"");
+        b.push(files[i]);
     }
     b.push("");
     b.push("%pre");
@@ -138,25 +139,32 @@ module.exports = function(grunt) {
           grunt.file.copy(actualSrcPath, copyTargetPath);
 
           //Generate actualTargetPath and save to filebasket for later use
-          var actualTargetPath = path.join(file.dest, srcPath);
-          fileBasket.push(actualTargetPath);
+          var actualTargetPath = "\"" + path.join(file.dest, srcPath) + "\"";
+
+          if (file.config) {
+            fileBasket.push("%config " + actualTargetPath);
+          } else if (file.doc) {
+            fileBasket.push("%doc " + actualTargetPath);
+          } else {
+            fileBasket.push(actualTargetPath);
+          }
 
           //If "mode" property is defined, then add the post install script to change
           //the mode of the file
           if (file.mode) {
-            options.postInstallScript.push("chmod "+file.mode+" '"+actualTargetPath+"'");
+            options.postInstallScript.push("chmod "+file.mode+" "+actualTargetPath);
           }
 
           //If "owner" property is defined, then add the post install script to change
           //the owner of the file
           if (file.owner) {
-            options.postInstallScript.push("chown "+file.owner+" '"+actualTargetPath+"'");
+            options.postInstallScript.push("chown "+file.owner+" "+actualTargetPath);
           }
 
           //If "group" property is defined, then add the post install script to change
           //the group of the file
           if (file.group) {
-            options.postInstallScript.push("chgrp "+file.group+" '"+actualTargetPath+"'");
+            options.postInstallScript.push("chgrp "+file.group+" "+actualTargetPath);
           }
         }
       });

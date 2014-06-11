@@ -16,16 +16,16 @@ module.exports = function(grunt) {
       all: [
         'Gruntfile.js',
         'tasks/*.js',
-        '<%= nodeunit.tests %>',
+        '<%= nodeunit.tests %>'
       ],
       options: {
-        jshintrc: '.jshintrc',
-      },
+        jshintrc: '.jshintrc'
+      }
     },
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp'],
+      tests: ['tmp']
     },
 
     // Configuration to be run (and then tested).
@@ -38,15 +38,17 @@ module.exports = function(grunt) {
           tempDir: "tmp"
         },
         files: [
-          {cwd:'test', src:['**'], dest:'/tmp/rpmtest5', mode: '755', owner: "rpmbuilder", group: "rpmbuilder"}
+          {cwd:'test', src:['**'], dest:'/tmp/rpmtest5', mode: '755', owner: "rpmbuilder", group: "rpmbuilder"},
+          {config:'true', cwd:'test', src:['**'], dest:'/tmp/rpmtest6', mode: '755', owner: "rpmbuilder", group: "rpmbuilder"},
+          {doc:'true', cwd:'test', src:['**'], dest:'/tmp/rpmtest7', mode: '755', owner: "rpmbuilder", group: "rpmbuilder"}
         ]
       }
     },
 
     // Unit tests.
     nodeunit: {
-      tests: ['test/*_test.js'],
-    },
+      tests: ['test/*_test.js']
+    }
 
   });
 
