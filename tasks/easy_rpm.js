@@ -42,7 +42,12 @@ function writeSpecFile(grunt, files, options) {
     b.push("");
     b.push("%files");
     for (i=0;i<files.length;i++) {
-        b.push(files[i]);
+       if (files[i].indexOf('%') === 0) {
+         b.push(files[i]);
+       }
+       else {
+         b.push("\""+files[i]+"\"");
+       }
     }
     b.push("");
     b.push("%pre");
@@ -134,11 +139,13 @@ module.exports = function(grunt) {
           actualSrcPath = path.join(file.cwd, srcPath);
         }
 
+        var copyTargetPath = path.join(buildRoot, file.dest, srcPath);
+        var actualTargetPath = path.join(file.dest, srcPath);
+
         //Copy file to the BUILDROOT directory and store the actual target path
         //for generating the SPEC file
         if (!grunt.file.isDir(actualSrcPath)) {
           grunt.verbose.writeln("Copying: " + actualSrcPath);
-          var copyTargetPath = path.join(buildRoot, file.dest, srcPath);
           grunt.file.copy(actualSrcPath, copyTargetPath);
 
           //Generate actualTargetPath and save to filebasket for later use
@@ -170,6 +177,12 @@ module.exports = function(grunt) {
             options.postInstallScript.push("chgrp "+file.group+" "+actualTargetPath);
           }
         }
+        else {
+           // save to filebasket for later use
+           grunt.verbose.writeln("Creating directory: " + actualSrcPath);
+           grunt.file.mkdir(copyTargetPath);
+           fileBasket.push('%dir \"' + actualTargetPath + '\"');
+        }
       });
     });
 
@@ -200,7 +213,6 @@ module.exports = function(grunt) {
         var outputFilename = options.name+"-"+options.version+"-"+options.release+"."+options.buildArch+".rpm";
         var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
         grunt.log.writeln("Copy output RPM package to the current directory: "+outputFilepath);
-
         var rpmDestination = path.resolve(options.rpmDestination);
         grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
       }
