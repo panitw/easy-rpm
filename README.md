@@ -247,7 +247,6 @@ grunt.initConfig({
 })
 ```
 
-<<<<<<< HEAD
 #### Setting %doc or %config of the target files
 In this example, the %doc or %config flag of each target file can be set
 
