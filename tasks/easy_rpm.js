@@ -8,17 +8,17 @@
 
 'use strict';
 
-var shortid = require("shortid");
-var path = require("path");
+var shortid = require("shortid"),
+  path = require("path");
 
 function writeSpecFile(grunt, files, options) {
 
-    var pkgName = options.name+"-"+options.version+"-"+options.buildArch;
-    var specFilepath = path.join(options.tempDir, "SPECS", pkgName+".spec");
-
-    var b = [];
-    var i = 0;
-    b.push("%define   _topdir "+path.resolve(options.tempDir));
+    var pkgName = options.name + "-" + options.version + "-" + options.buildArch,
+      specFilepath = path.join(options.tempDir, "SPECS", pkgName + ".spec"),
+      b = [],
+      i = 0;
+    
+    b.push("%define   _topdir " + path.resolve(options.tempDir));
     b.push("");
     b.push("Name: "+options.name);
     b.push("Version: "+options.version);
@@ -33,7 +33,7 @@ function writeSpecFile(grunt, files, options) {
     }
 
     if (options.dependencies.length > 0) {
-      b.push("Requires: "+ options.dependencies.join(","));
+      b.push("Requires: " + options.dependencies.join(","));
     }
 
     b.push("");
@@ -51,22 +51,22 @@ function writeSpecFile(grunt, files, options) {
     }
     b.push("");
     b.push("%pre");
-    for (i=0;i<options.preInstallScript.length;i++) {
+    for (i=0; i<options.preInstallScript.length; i++) {
       b.push(options.preInstallScript[i]);
     }
     b.push("");
     b.push("%post");
-    for (i=0;i<options.postInstallScript.length;i++) {
+    for (i=0; i<options.postInstallScript.length; i++) {
       b.push(options.postInstallScript[i]);
     }
     b.push("");
     b.push("%preun");
-    for (i=0;i<options.preUninstallScript.length;i++) {
+    for (i=0; i<options.preUninstallScript.length; i++) {
       b.push(options.preUninstallScript[i]);
     }
     b.push("");
     b.push("%postun");
-    for (i=0;i<options.postUninstallScript.length;i++) {
+    for (i=0; i<options.postUninstallScript.length; i++) {
       b.push(options.postUninstallScript[i]);
     }
 
@@ -81,9 +81,6 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask("easy_rpm", "Easily create RPM package to install files/directories", function() {
 
-    var done = this.async();
-
-    // Merge task-specific and/or target-specific options with these defaults.
     var options = this.options({
       name: "noname",
       summary: "No Summary",
@@ -217,6 +214,26 @@ module.exports = function(grunt) {
         grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
       }
 
+      //Execute the postPackageCreate callback
+      if (options.postPackageCreate){
+        var rpmFilename = options.name + "-" + options.version + "-" + options.release + "." + options.buildArch + ".rpm";
+        var rpmPath = path.join(tmpDir, "RPMS", options.buildArch);
+
+        if (typeof options.postPackageCreate === "string"){
+          if (grunt.file.isDir(options.postPackageCreate)){
+            var destinationFile = path.join(options.postPackageCreate, rpmFilename);
+            grunt.file.copy(path.join(rpmFilename,rpmFilename) , destinationFile);
+            grunt.log.writeln("Copied output RPM package to: " + destinationFile);
+          }
+          else {
+            grunt.fail.warn('Destination path is not a directory');
+          }
+        }
+        else if (typeof options.postPackageCreate === "function"){
+          options.postPackageCreate(rpmPath, rpmFilename);
+        }
+      }      
+
       //Delete temp folder
       if (!options.keepTemp) {
         grunt.log.writeln("Deleting tmp folder "+tmpDir);
@@ -232,4 +249,3 @@ module.exports = function(grunt) {
     });
   });
 };
-
