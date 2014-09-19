@@ -42,12 +42,7 @@ function writeSpecFile(grunt, files, options) {
     b.push("");
     b.push("%files");
     for (i=0;i<files.length;i++) {
-       if (files[i].indexOf('%') === 0) {
-         b.push(files[i]);
-       }
-       else {
-         b.push("\""+files[i]+"\"");
-       }
+       b.push(files[i]);
     }
     b.push("");
     b.push("%pre");
@@ -98,12 +93,14 @@ module.exports = function(grunt) {
       postUninstallScript: [],
       tempDir: "tmp-"+shortid.generate(),
       rpmDestination: ".",
-      keepTemp: false
+      keepTemp: false,
+      quoteFilePaths: true
     });
 
-    var tmpDir = path.resolve(options.tempDir);
-    var buildRoot = tmpDir + "/BUILDROOT/";
-    var rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"];
+    var tmpDir = path.resolve(options.tempDir),
+        buildRoot = tmpDir + "/BUILDROOT/",
+        rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"],
+        done = this.async();
 
     //If the tmpDir exists (probably from previous build), delete it first
     if (grunt.file.exists(tmpDir)) {
@@ -159,7 +156,10 @@ module.exports = function(grunt) {
           grunt.file.copy(actualSrcPath, copyTargetPath);
 
           //Generate actualTargetPath and save to filebasket for later use
-          var actualTargetPath = "\"" + path.join(file.dest, srcPath) + "\"";
+          var actualTargetPath = path.join(file.dest, srcPath);
+          if (options.quoteFilePaths) {
+            actualTargetPath = "\"" + actualTargetPath + "\"";
+          }
 
           if (file.config) {
             fileBasket.push("%config " + actualTargetPath);
@@ -222,8 +222,8 @@ module.exports = function(grunt) {
         //Copy the build output to the current directory
         var outputFilename = options.name+"-"+options.version+"-"+options.release+"."+options.buildArch+".rpm";
         var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
-        grunt.log.writeln("Copy output RPM package to the current directory: "+outputFilepath);
         var rpmDestination = path.resolve(options.rpmDestination);
+        grunt.log.writeln("Copy output RPM package to: " + rpmDestination);
         grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
       }
 
