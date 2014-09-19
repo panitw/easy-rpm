@@ -76,28 +76,32 @@ module.exports = function(grunt) {
 
   grunt.registerMultiTask("easy_rpm", "Easily create RPM package to install files/directories", function() {
 
-    var options = this.options({
-      name: "noname",
-      summary: "No Summary",
-      description: "No Description",
-      version: "0.1.0",
-      release: "1",
-      license: "MIT",
-      vendor: "Vendor",
-      group: "Development/Tools",
-      buildArch: "noarch",
-      dependencies: [],
-      preInstallScript: [],
-      postInstallScript: [],
-      preUninstallScript: [],
-      postUninstallScript: [],
-      tempDir: "tmp-"+shortid.generate(),
-      rpmDestination: ".",
-      keepTemp: false,
-      quoteFilePaths: true
-    });
-
-    var tmpDir = path.resolve(options.tempDir),
+    var pkg = grunt.file.readJSON('package.json'),
+        defaults = {
+          name: "noname",
+          summary: "No Summary",
+          description: "No Description",
+          version: "0.1.0",
+          release: "1",
+          license: "MIT",
+          vendor: "Vendor",
+          group: "Development/Tools",
+          buildArch: "noarch",
+          dependencies: [],
+          preInstallScript: [],
+          postInstallScript: [],
+          preUninstallScript: [],
+          postUninstallScript: [],
+          tempDir: "tmp-"+shortid.generate(),
+          rpmDestination: ".",
+          keepTemp: false,
+          quoteFilePaths: true
+        },
+        // Apply options and defaults in the following order of precedence:
+        //    gruntInit > package > defaults
+        // Where options on the left take precedence over those on the right.
+        options = this.options(grunt.util._.defaults(pkg, defaults)),
+        tmpDir = path.resolve(options.tempDir),
         buildRoot = tmpDir + "/BUILDROOT/",
         rpmStructure = ["BUILD","BUILDROOT","RPMS","SOURCES","SPECS","SRPMS"],
         done = this.async();
