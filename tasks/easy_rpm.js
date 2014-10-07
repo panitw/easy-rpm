@@ -234,14 +234,17 @@ module.exports = function(grunt) {
             cmd: buildCmd,
             args: buildArgs
         }, function(error, result, code) {
-            if (!error) {
-                //Copy the build output to the current directory
-                var outputFilename = options.name + "-" + options.version + "-" + options.release + "." + options.buildArch + ".rpm";
-                var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
-                var rpmDestination = path.resolve(options.rpmDestination);
-                grunt.log.writeln("Copy output RPM package to: " + rpmDestination);
-                grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
+            if (error || code) {
+                done(false);
+                return;
             }
+
+            //Copy the build output to the current directory
+            var outputFilename = options.name + "-" + options.version + "-" + options.release + "." + options.buildArch + ".rpm";
+            var outputFilepath = path.join(tmpDir, "RPMS", options.buildArch, outputFilename);
+            var rpmDestination = path.resolve(options.rpmDestination);
+            grunt.log.writeln("Copy output RPM package to: " + rpmDestination);
+            grunt.file.copy(outputFilepath, path.join(rpmDestination, outputFilename));
 
             //Execute the postPackageCreate callback
             if (options.postPackageCreate) {
