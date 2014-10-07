@@ -39,30 +39,43 @@ function writeSpecFile(grunt, files, options) {
     b.push("");
     b.push("%description");
     b.push(options.description);
+
     b.push("");
     b.push("%files");
     for (i=0;i<files.length;i++) {
        b.push(files[i]);
     }
-    b.push("");
-    b.push("%pre");
-    for (i=0; i<options.preInstallScript.length; i++) {
-      b.push(options.preInstallScript[i]);
+
+    if (options.preInstallScript.length > 0) {
+        b.push("");
+        b.push("%pre");
+        for (i = 0; i < options.preInstallScript.length; i++) {
+            b.push(options.preInstallScript[i]);
+        }
     }
-    b.push("");
-    b.push("%post");
-    for (i=0; i<options.postInstallScript.length; i++) {
-      b.push(options.postInstallScript[i]);
+
+    if (options.postInstallScript.length > 0) {
+        b.push("");
+        b.push("%post");
+        for (i = 0; i < options.postInstallScript.length; i++) {
+            b.push(options.postInstallScript[i]);
+        }
     }
-    b.push("");
-    b.push("%preun");
-    for (i=0; i<options.preUninstallScript.length; i++) {
-      b.push(options.preUninstallScript[i]);
+
+    if (options.preUninstallScript.length > 0) {
+        b.push("");
+        b.push("%preun");
+        for (i = 0; i < options.preUninstallScript.length; i++) {
+            b.push(options.preUninstallScript[i]);
+        }
     }
-    b.push("");
-    b.push("%postun");
-    for (i=0; i<options.postUninstallScript.length; i++) {
-      b.push(options.postUninstallScript[i]);
+
+    if (options.postUninstallScript.length > 0) {
+        b.push("");
+        b.push("%postun");
+        for (i = 0; i < options.postUninstallScript.length; i++) {
+            b.push(options.postUninstallScript[i]);
+        }
     }
 
     var specFileContent = b.join("\n");
