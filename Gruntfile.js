@@ -12,6 +12,46 @@ module.exports = function(grunt) {
 
   // Project configuration.
   grunt.initConfig({
+      jsbeautifier: {
+          options: {
+              html: {
+                  braceStyle: 'collapse',
+                  indentChar: ' ',
+                  indentScripts: 'keep',
+                  indentSize: 4,
+                  maxPreserveNewlines: 10,
+                  preserveNewlines: true,
+                  unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u'],
+                  wrapLineLength: 0
+              },
+              css: {
+                  indentChar: ' ',
+                  indentSize: 4
+              },
+              js: {
+                  braceStyle: 'collapse',
+                  breakChainedMethods: false,
+                  e4x: false,
+                  evalCode: false,
+                  indentLevel: 0,
+                  indentSize: 1,
+                  indentWithTabs: true,
+                  jslintHappy: false,
+                  keepArrayIndentation: false,
+                  keepFunctionIndentation: false,
+                  maxPreserveNewlines: 10,
+                  preserveNewlines: true,
+                  spaceBeforeConditional: true,
+                  spaceInParen: false,
+                  unescapeStrings: false,
+                  wrapLineLength: 0
+              }
+          },
+          files: [
+              '**/*.js'
+          ]
+      },
+      
     jshint: {
       all: [
         'Gruntfile.js',
@@ -56,9 +96,10 @@ module.exports = function(grunt) {
   grunt.loadTasks('tasks');
 
   // These plugins provide necessary tasks.
-  grunt.loadNpmTasks('grunt-contrib-jshint');
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-nodeunit');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-nodeunit');
+    grunt.loadNpmTasks('grunt-jsbeautifier');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
