@@ -8,8 +8,18 @@
 
 'use strict';
 
-var shortid = require("shortid"),
-    path = require("path");
+var fs = require("fs"),
+    path = require("path"),
+    shortid = require("shortid");
+
+function preserveCopy(srcpath, destpath, options) {
+    grunt.file.copy(srcpath, destpath, options);
+    try {
+        fs.chmodSync(destpath, fs.statSync(srcpath).mode);
+    } catch (e) {
+        throw grunt.util.error('Error setting permissions of "' + destpath + '" file.', e);
+    }
+}
 
 function writeSpecFile(grunt, files, options) {
 
@@ -170,7 +180,7 @@ module.exports = function(grunt) {
                 //for generating the SPEC file
                 if (!grunt.file.isDir(actualSrcPath)) {
                     grunt.verbose.writeln("Copying: " + actualSrcPath);
-                    grunt.file.copy(actualSrcPath, copyTargetPath);
+                    preserveCopy(actualSrcPath, copyTargetPath);
 
                     //Generate actualTargetPath and save to filebasket for later use
                     var actualTargetPath = path.join(file.dest, srcPath);
