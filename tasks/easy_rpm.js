@@ -12,7 +12,7 @@ var fs = require("fs"),
     path = require("path"),
     shortid = require("shortid");
 
-function preserveCopy(srcpath, destpath, options) {
+function preserveCopy(grunt, srcpath, destpath, options) {
     grunt.file.copy(srcpath, destpath, options);
     try {
         fs.chmodSync(destpath, fs.statSync(srcpath).mode);
@@ -93,7 +93,6 @@ function writeSpecFile(grunt, files, options) {
 
     return specFilepath;
 }
-
 
 module.exports = function(grunt) {
 
@@ -180,7 +179,7 @@ module.exports = function(grunt) {
                 //for generating the SPEC file
                 if (!grunt.file.isDir(actualSrcPath)) {
                     grunt.verbose.writeln("Copying: " + actualSrcPath);
-                    preserveCopy(actualSrcPath, copyTargetPath);
+                    preserveCopy(grunt, actualSrcPath, copyTargetPath);
 
                     //Generate actualTargetPath and save to filebasket for later use
                     var actualTargetPath = path.join(file.dest, srcPath);
