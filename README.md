@@ -153,6 +153,7 @@ grunt.initConfig({
     },
   },
 })
+```
 
 #### Setting Target Mode, Owner, and Group
 Each target file can have it's mode, owner, and group set by specifying these
