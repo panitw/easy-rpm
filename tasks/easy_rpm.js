@@ -181,8 +181,6 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln("Copying: " + actualSrcPath);
                     preserveCopy(grunt, actualSrcPath, copyTargetPath);
 
-                    //Generate actualTargetPath and save to filebasket for later use
-                    var actualTargetPath = path.join(file.dest, srcPath);
                     if (options.quoteFilePaths) {
                         actualTargetPath = "\"" + actualTargetPath + "\"";
                     }
