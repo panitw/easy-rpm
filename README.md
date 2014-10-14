@@ -205,12 +205,17 @@ grunt.initConfig({
 ```
 
 ### Options
+Note that some options inherit their values from your `package.json`.  These
+options are marked by 'Inherits from `package.json`'.
+
 #### options.name
 Type: `String`
 Default value: `'noname'`
 
 A string value that is used to set at the name of your RPM package. This value
 is also used in the construction of the RPM file name.
+
+'Inherits from `package.json`'.
 
 #### options.summary
 Type: `String`
@@ -224,12 +229,16 @@ Default value: `'No Description'`
 
 A string value that is used to set as the description of your RPM package.
 
+'Inherits from `package.json`'.
+
 #### options.version
 Type: `String`
 Default value: `'0.1.0'`
 
 A string value that is used to set as the version of your RPM package. This
 value is also used in the construction of the RPM file name.
+
+'Inherits from `package.json`'.
 
 #### options.release
 Type: `String`
