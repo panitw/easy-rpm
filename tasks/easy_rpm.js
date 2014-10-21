@@ -21,7 +21,7 @@ function preserveCopy(grunt, srcpath, destpath, options) {
     }
 }
 
-function writeSpecFile(grunt, files, options) {
+function writeSpecFile(grunt, files, attrs, options) {
 
     var pkgName = options.name + "-" + options.version + "-" + options.buildArch,
         specFilepath = path.join(options.tempDir, "SPECS", pkgName + ".spec"),
@@ -38,6 +38,16 @@ function writeSpecFile(grunt, files, options) {
     b.push("Group: " + options.group);
     b.push("License: " + options.license);
     b.push("BuildArch: " + options.buildArch);
+
+    // Add prefix tag for relocatable packages:
+    // http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html
+    if (options.hasOwnProperty('prefix')) {
+      if (grunt.util.kindOf(options.prefix) === "string" &&
+          options.prefix.length > 0) {
+          b.push("Prefix: " + options.prefix);
+      }
+    }
+
     if (typeof options.autoReqProv !== "undefined") {
         b.push("AutoReqProv: " + options.autoReqProv);
     }
@@ -64,9 +74,18 @@ function writeSpecFile(grunt, files, options) {
         }
     }
 
-    if (options.postInstallScript.length > 0) {
+    if (attrs.length > 0 || options.postInstallScript.length > 0) {
         b.push("");
         b.push("%post");
+    }
+    
+    if (attrs.length > 0) {
+        for (i = 0; i < attrs.length; i++) {
+            b.push(attrs[i]);
+        }
+    }
+
+    if (options.postInstallScript.length > 0) {
         for (i = 0; i < options.postInstallScript.length; i++) {
             b.push(options.postInstallScript[i]);
         }
@@ -150,7 +169,8 @@ module.exports = function(grunt) {
 
         //Copy source to the BUILDROOT folder
         grunt.log.writeln("Copying files to tmp directory");
-        var fileBasket = [];
+        var fileBasket = [],
+            attrBasket = [];
         this.files.forEach(function(file) {
 
             //All file entry should have both "src" and "dest"
@@ -196,19 +216,19 @@ module.exports = function(grunt) {
                     //If "mode" property is defined, then add the post install script to change
                     //the mode of the file
                     if (file.mode) {
-                        options.postInstallScript.push("chmod " + file.mode + " " + actualTargetPath);
+                        attrBasket.push("chmod " + file.mode + " " + actualTargetPath);
                     }
 
                     //If "owner" property is defined, then add the post install script to change
                     //the owner of the file
                     if (file.owner) {
-                        options.postInstallScript.push("chown " + file.owner + " " + actualTargetPath);
+                        attrBasket.push("chown " + file.owner + " " + actualTargetPath);
                     }
 
                     //If "group" property is defined, then add the post install script to change
                     //the group of the file
                     if (file.group) {
-                        options.postInstallScript.push("chgrp " + file.group + " " + actualTargetPath);
+                        attrBasket.push("chgrp " + file.group + " " + actualTargetPath);
                     }
                 } else {
                     // save to filebasket for later use
@@ -221,7 +241,8 @@ module.exports = function(grunt) {
 
         //Generate SPEC file
         grunt.log.writeln("Generating RPM spec file");
-        var specFilepath = writeSpecFile(grunt, fileBasket, options);
+        var specFilepath = writeSpecFile(grunt, fileBasket, attrBasket,
+            options);
 
         //Build RPM
         grunt.log.writeln("Building RPM package");
