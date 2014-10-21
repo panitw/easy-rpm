@@ -2,6 +2,8 @@
 A [Grunt](http://gruntjs.com/) task to easily create [RPM](http://www.rpm.org/)
 packages.
 
+[![NPM](https://nodei.co/npm/grunt-easy-rpm.png?compact=true)](https://nodei.co/npm/grunt-easy-rpm/)
+
 ## Prerequisites
 This plugin requires Grunt `~0.4.5` and, at minimum, the `rpmdevtools`.
 The RPM tools can be installed on most unix-like systems, including Mac OSX.
