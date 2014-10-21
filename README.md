@@ -272,6 +272,15 @@ Default value: `'noarch'`
 A string value that is used to set specify the target architecture of your RPM
 package. This value is also used in the constructon of the RPM file name.
 
+#### options.prefix
+Type: `String`
+Default value: `undefined`
+
+This will specify the relocatable root of the package so that it may be
+relocated by the user at install time.  The manual entry for the
+[prefix tag](http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html) explains
+the use case quite well.
+
 #### options.dependencies
 Type: `Array<String>`
 Default value: `[]`

@@ -38,6 +38,16 @@ function writeSpecFile(grunt, files, options) {
     b.push("Group: " + options.group);
     b.push("License: " + options.license);
     b.push("BuildArch: " + options.buildArch);
+
+    // Add prefix tag for relocatable packages:
+    // http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html
+    if (options.hasOwnProperty('prefix')) {
+      if (grunt.util.kindOf(options.prefix) === "string" &&
+          options.prefix.length > 0) {
+          b.push("Prefix: " + options.prefix);
+      }
+    }
+
     if (typeof options.autoReqProv !== "undefined") {
         b.push("AutoReqProv: " + options.autoReqProv);
     }
