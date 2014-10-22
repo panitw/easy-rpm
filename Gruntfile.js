@@ -32,20 +32,6 @@ module.exports = function(grunt) {
 
         jsbeautifier: {
             options: {
-                html: {
-                    braceStyle: 'collapse',
-                    indentChar: ' ',
-                    indentScripts: 'keep',
-                    indentSize: 4,
-                    maxPreserveNewlines: 10,
-                    preserveNewlines: true,
-                    unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u'],
-                    wrapLineLength: 0
-                },
-                css: {
-                    indentChar: ' ',
-                    indentSize: 4
-                },
                 js: {
                     braceStyle: 'collapse',
                     breakChainedMethods: false,
@@ -86,47 +72,6 @@ module.exports = function(grunt) {
         // Before generating any new files, remove any previously-created files.
         clean: {
             tests: ['tmp']
-        },
-
-        // Configuration to be run (and then tested).
-        easy_rpm: {
-            default_options: {
-                options: {
-                    version: "v1.0.0",
-                    release: 5,
-                    buildArch: "x86_64",
-                    tempDir: "tmp"
-                },
-                files: [{
-                    cwd: 'test',
-                    src: ['**'],
-                    dest: '/tmp/rpmtest5',
-                    mode: '755',
-                    owner: "rpmbuilder",
-                    group: "rpmbuilder"
-                }, {
-                    config: 'true',
-                    cwd: 'test',
-                    src: ['**'],
-                    dest: '/tmp/rpmtest6',
-                    mode: '755',
-                    owner: "rpmbuilder",
-                    group: "rpmbuilder"
-                }, {
-                    doc: 'true',
-                    cwd: 'test',
-                    src: ['**'],
-                    dest: '/tmp/rpmtest7',
-                    mode: '755',
-                    owner: "rpmbuilder",
-                    group: "rpmbuilder"
-                }]
-            }
-        },
-
-        // Unit tests.
-        nodeunit: {
-            tests: ['test/*_test.js']
         }
 
     });
