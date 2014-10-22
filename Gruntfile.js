@@ -59,21 +59,40 @@ module.exports = function(grunt) {
         },
 
         jshint: {
-            all: [
-                'Gruntfile.js',
-                'tasks/*.js',
-                '<%= nodeunit.tests %>'
-            ],
             options: {
                 jshintrc: '.jshintrc'
-            }
+            },
+            all: [
+                'Gruntfile.js',
+                'tasks/**/*.js',
+                'test/**/*.js'
+            ]
+        },
+
+        mochaTest: {
+          test: {
+            options: {
+              reporter: 'dot',
+              clearRequireCache: true
+            },
+            src: ['test/**/*.js']
+          }
+        },
+
+        watch: {
+          js: {
+            options: {
+              spawn: false
+            },
+            files: '**/*.js',
+            tasks: ['mochaTest']
+          }
         },
 
         // Before generating any new files, remove any previously-created files.
         clean: {
             tests: ['tmp']
         }
-
     });
 
     // Actually load this plugin's task(s).
@@ -83,17 +102,23 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-nodeunit');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-jsbeautifier');
+    grunt.loadNpmTasks('grunt-mocha-test');
+
+    // Handle watch events and setup the mochaTest task options accordingly.
+    var defaultTestSrc = grunt.config('mochaTest.test.src');
+    grunt.event.on('watch', function(action, filepath) {
+      grunt.config('mochaTest.test.src', defaultTestSrc);
+      if (filepath.match('test/')) {
+        grunt.config('mochaTest.test.src', filepath);
+      }
+    });
 
     // Aliases
     grunt.registerTask('format', ['jsbeautifier']);
 
-    // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-    // plugin's task(s), then test the result.
-    grunt.registerTask('test', ['clean', 'easy_rpm', 'nodeunit']);
-
     // By default, lint and run all tests.
-    grunt.registerTask('default', ['jshint', 'test']);
+    grunt.registerTask('default', ['jshint', 'mochaTest']);
 
 };
