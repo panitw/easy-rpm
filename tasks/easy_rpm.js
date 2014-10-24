@@ -36,6 +36,7 @@ function writeSpecFile(grunt, files, attrs, options) {
     b.push("Group: " + options.group);
     b.push("Summary: " + options.summary);
     b.push("Group: " + options.group);
+    b.push("Vendor: " + options.vendor);
     b.push("License: " + options.license);
     b.push("BuildArch: " + options.buildArch);
 
