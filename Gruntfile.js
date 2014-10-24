@@ -87,11 +87,6 @@ module.exports = function(grunt) {
             files: '**/*.js',
             tasks: ['mochaTest']
           }
-        },
-
-        // Before generating any new files, remove any previously-created files.
-        clean: {
-            tests: ['tmp']
         }
     });
 
@@ -100,7 +95,6 @@ module.exports = function(grunt) {
 
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-bump');
-    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-jsbeautifier');
