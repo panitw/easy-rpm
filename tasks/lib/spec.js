@@ -85,4 +85,16 @@ var Spec = function() {
   };
 };
 
+Spec.prototype.addRequirements = function() {
+  for (var i = 0; i < arguments.length; i++) {
+    this.tags.requires.push(arguments[i]);
+  }
+};
+
+Spec.prototype.addConflicts = function() {
+  for (var i = 0; i < arguments.length; i++) {
+    this.tags.conflicts.push(arguments[i]);
+  }
+};
+
 module.exports = Spec;
