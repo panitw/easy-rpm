@@ -283,6 +283,13 @@ relocated by the user at install time.  The manual entry for the
 [prefix tag](http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html) explains
 the use case quite well.
 
+#### options.url
+Type: `String`
+Default Value: `""`
+
+A URL to the project homepage or documentation of the project. Defined in the
+[spec-file specification](http://www.rpm.org/wiki/PackagerDocs/Spec#URL:andPackager:Tags).
+
 #### options.dependencies
 Type: `Array<String>`
 Default value: `[]`
