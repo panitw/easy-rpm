@@ -2,6 +2,8 @@
 A [Grunt](http://gruntjs.com/) task to easily create [RPM](http://www.rpm.org/)
 packages.
 
+[![NPM](https://nodei.co/npm/grunt-easy-rpm.png?compact=true)](https://nodei.co/npm/grunt-easy-rpm/)
+
 ## Prerequisites
 This plugin requires Grunt `~0.4.5` and, at minimum, the `rpmdevtools`.
 The RPM tools can be installed on most unix-like systems, including Mac OSX.
@@ -19,7 +21,7 @@ Installation can be done from source either manually or with
 If you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out
 the [Getting Started](http://gruntjs.com/getting-started) guide.  The guide
 covers creating a [Gruntfile](http://gruntjs.com/sample-gruntfile), installing
-and using plugins. Once you're familiar with thr process, install `easy-rpm`:
+and using plugins. Once you're familiar with the process, install `easy-rpm`:
 
 ```shell
 npm install grunt-easy-rpm --save-dev
@@ -54,7 +56,7 @@ grunt.initConfig({
 ### Usage Examples
 #### Basic Usage
 In this example, the default options are used for most of the fields. Each file
-is copied indivitually with the directory structure being preserved.
+is copied individually with the directory structure being preserved.
 
 Note that the `files` group(s) **must** reside in targets, not the `options`
 definition.  In the example below, the target name is 'release'.
@@ -127,7 +129,7 @@ grunt.initConfig({
 })
 ```
 
-#### Excludng Files
+#### Excluding Files
 Files can be excluded from packaging by adding them to the `excludeFiles` list.
 The node-glob wildcard syntax can be used to specify exclusions as well.  Note
 that the paths to exclude apply to the source file paths.
@@ -270,7 +272,7 @@ Type: `String`
 Default value: `'noarch'`
 
 A string value that is used to set specify the target architecture of your RPM
-package. This value is also used in the constructon of the RPM file name.
+package. This value is also used in the construction of the RPM file name.
 
 #### options.prefix
 Type: `String`
@@ -280,6 +282,13 @@ This will specify the relocatable root of the package so that it may be
 relocated by the user at install time.  The manual entry for the
 [prefix tag](http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html) explains
 the use case quite well.
+
+#### options.url
+Type: `String`
+Default Value: `""`
+
+A URL to the project homepage or documentation of the project. Defined in the
+[spec-file specification](http://www.rpm.org/wiki/PackagerDocs/Spec#URL:andPackager:Tags).
 
 #### options.dependencies
 Type: `Array<String>`
@@ -292,28 +301,28 @@ This is mapped to the `Requires` property in spec file.
 Type: `Array<String>`
 Default value: `[]`
 
-An array of commands to be excecuted before the installation. Each element in
+An array of commands to be executed before the installation. Each element in
 the array represents a command.
 
 #### options.postInstallScript
 Type: `Array<String>`
 Default value: `[]`
 
-An array of commands to be excecuted after the installation. Each element in
+An array of commands to be executed after the installation. Each element in
 the array represents a command.
 
 #### options.preUninstallScript
 Type: `Array<String>`
 Default value: `[]`
 
-An array of commands to be excecuted before uninstallation. Each element in
+An array of commands to be executed before uninstallation. Each element in
 the array represents a command.
 
 #### options.postUninstallScript
 Type: `Array<String>`
 Default value: `[]`
 
-An array of commands to be excecuted after uninstallation. Each element in
+An array of commands to be executed after uninstallation. Each element in
 the array represents a command.
 
 #### options.tempDir

@@ -34,8 +34,10 @@ function writeSpecFile(grunt, files, attrs, options) {
     b.push("Version: " + options.version);
     b.push("Release: " + options.release);
     b.push("Group: " + options.group);
+    b.push("URL: " + options.url);
     b.push("Summary: " + options.summary);
     b.push("Group: " + options.group);
+    b.push("Vendor: " + options.vendor);
     b.push("License: " + options.license);
     b.push("BuildArch: " + options.buildArch);
 
@@ -125,6 +127,7 @@ module.exports = function(grunt) {
                 version: "0.1.0",
                 release: "1",
                 license: "MIT",
+                url: "",
                 vendor: "Vendor",
                 group: "Development/Tools",
                 buildArch: "noarch",
