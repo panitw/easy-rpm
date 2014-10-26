@@ -294,8 +294,8 @@ A URL to the project homepage or documentation of the project. Defined in the
 Type: `Array` or `Function`
 Default Value: `""`
 
-An array of changelog lines or a function called to create a changelog. This will add
-the `%changelog` to the spec-file.
+An array of changelog lines or a function called to create an array of lines containing
+the changelog. This will add the `%changelog` to the spec-file.
 
 #### options.dependencies
 Type: `Array<String>`
