@@ -297,6 +297,9 @@ Default Value: `""`
 An array of changelog lines or a function called to create an array of lines containing
 the changelog. This will add the `%changelog` to the spec-file.
 
+_NOTE:_ You will still have to adhere to the changelog syntax to use this properly
+for more information read the [Fedora packaging guidelines on Changelogs](http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs)!
+
 #### options.dependencies
 Type: `Array<String>`
 Default value: `[]`
