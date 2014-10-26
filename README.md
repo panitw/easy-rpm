@@ -290,6 +290,13 @@ Default Value: `""`
 A URL to the project homepage or documentation of the project. Defined in the
 [spec-file specification](http://www.rpm.org/wiki/PackagerDocs/Spec#URL:andPackager:Tags).
 
+#### options.changelog
+Type: `Array` or `Function`
+Default Value: `""`
+
+An array of changelog lines or a function called to create a changelog. This will add
+the `%changelog` to the spec-file.
+
 #### options.dependencies
 Type: `Array<String>`
 Default value: `[]`
