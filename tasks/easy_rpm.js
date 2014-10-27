@@ -66,24 +66,24 @@ function writeSpecFile(grunt, files, options) {
     b.push("%description");
     b.push(options.description);
 
-	b.push("");
-	b.push("%changelog");
-	
-	if (typeof options.changelog === "object") {
-		if (options.changelog.length > 0) {
-			for (i = 0; i < options.changelog.length; i++) {
-				b.push(options.changelog[i]);
-			}
-		}
-	} else if (typeof options.changelog === "function") {
-		var changelog_lines = options.changelog();
-		if (changelog_lines.length > 0) {
-			for ( i = 0; i < changelog_lines.length; i++) {
-				b.push(changelog_lines[i]);
-			}
-		}
+    b.push("");
+    b.push("%changelog");
+    
+    if (typeof options.changelog === "object") {
+	if (options.changelog.length > 0) {
+	    for (i = 0; i < options.changelog.length; i++) {
+		b.push(options.changelog[i]);
+	    }
 	}
-
+    } else if (typeof options.changelog === "function") {
+	var changelog_lines = options.changelog();
+	if (changelog_lines.length > 0) {
+	    for ( i = 0; i < changelog_lines.length; i++) {
+		b.push(changelog_lines[i]);
+	    }
+	}
+    }
+    
     b.push("");
     b.push("%files");
     for (i = 0; i < files.length; i++) {
