@@ -183,4 +183,51 @@ describe('spec writer', function() {
       });
     });
   });
+
+  describe('sources', function() {
+    describe('with a single source defined', function() {
+      it('should use an un-numbered source tag', function() {
+        spec.addSources('ftp://x.example.com/pkg.tar.gz');
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_08');
+      });
+    });
+
+    describe('with multiple sources defined', function() {
+      it('should use numbered source tags', function() {
+        spec.addSources('source_A.tar.gz', 'source_B.tar.gz',
+          'source_C.tar.gz');
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_09');
+      });
+    });
+  });
+
+  describe('nosources', function() {
+    it('should produce a NoSources tag when non-empty', function() {
+      spec.addSources('source_A.tar.gz', 'source_B.tar.gz',
+        'source_C.tar.gz');
+      spec.addNoSources(0, 2);
+
+      specWriter(spec, function(out, err) {
+        result = out;
+        resultErr = err;
+      });
+
+      assert.strictEqual(resultErr, null, 'result error should be null');
+      assertEqualsExpectedFile(result, 'expect_10');
+    });
+  });
 });

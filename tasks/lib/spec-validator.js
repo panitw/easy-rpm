@@ -139,6 +139,38 @@ function validateBuildRoot(value, result) {
   }
 }
 
+function validateSources(sources, result) {
+  for (var i = 0; i < sources.length; i++) {
+    if (urlvalidator.isWebUri(sources[i]) === undefined) {
+      result.warnings.push('Sources should be valid URLs.');
+      return;
+    }
+  }
+}
+
+function validateNoSources(sources, nosources, result) {
+  var i, nosrc, nosrcInt, hasError = false, hasWarning = false;
+  for (i = 0; i < nosources.length; i++) {
+    // No need for duplicate errors and/or warnings.
+    if (hasError && hasWarning) {
+      return;
+    }
+
+    nosrc = nosources[i];
+    if (!validator.isInt(nosrc)) {
+      result.errors.push('NoSources values must be integral.');
+      hasError = true;
+    } else {
+      nosrcInt = validator.toInt(nosrc);
+      if (nosrcInt > (sources.length-1) || nosrcInt < 0) {
+        result.warnings.push('NoSource indexes should match to the Sources ' +
+            'with a zero-based index.');
+        hasWarning = true;
+      }
+    }
+  }
+}
+
 module.exports = function(spec) {
   var result = {
     warnings: [],
@@ -162,6 +194,8 @@ module.exports = function(spec) {
   validateOS(spec.tags.excludeOS, spec.tags.exclusiveOS, result);
   validatePrefix(spec.tags.prefix, result);
   validateBuildRoot(spec.tags.buildRoot, result);
+  validateSources(spec.tags.sources, result);
+  validateNoSources(spec.tags.sources, spec.tags.noSources, result);
 
   // Set the valid property on the result for simple checking.
   result.valid = result.errors.length === 0;

@@ -131,7 +131,17 @@ var Spec = function() {
     // is installed during the build process. In order for a build root to be
     // defined and actually used, a number of issues must be taken into account.
     // See http://www.rpm.org/max-rpm-snapshot/ch-rpm-anywhere.html
-    buildRoot: null
+    buildRoot: null,
+
+    // Effectively points to the source locations provided by the developer(s).
+    // It is best to read about this at:
+    // http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-tags.html
+    sources: [],
+
+    // The nosource tag is used to direct RPM to omit one or more source files
+    // from the source package.  More information at:
+    // http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-tags.html
+    noSources: []
   };
 };
 
@@ -174,6 +184,14 @@ Spec.prototype.addExcludeOS = function() {
 
 Spec.prototype.addExclusiveOS = function() {
   this._bulkAddToTag('exclusiveOS', arguments);
+};
+
+Spec.prototype.addSources = function() {
+  this._bulkAddToTag('sources', arguments);
+};
+
+Spec.prototype.addNoSources = function() {
+  this._bulkAddToTag('noSources', arguments);
 };
 
 module.exports = Spec;

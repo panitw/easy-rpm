@@ -244,4 +244,31 @@ describe('validating spec property', function() {
       assertResult(result, false, 0, 1);
     });
   });
+
+  describe('source tags', function() {
+    it('should produce a warning if any source is not a valid URL', function() {
+      spec.addSources(
+        'https://github.com/panitw/easy-rpm/archive/1.4.1.tar.gz',
+        'not.a.url',
+        'also%not^a&url');
+      result = specValidator(spec);
+      assertResult(result, true, 1, 0);
+    });
+  });
+
+  describe('nosource tag', function() {
+    it('should produce an error if non-numeric', function() {
+      spec.addSources('http://www.google.com/', 'http://github.com');
+      spec.addNoSources('0', 'alpha');
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+
+    it('should produce a warning if any index does not exist', function() {
+      spec.addSources('http://www.google.com/', 'http://github.com');
+      spec.addNoSources(0, 2);
+      result = specValidator(spec);
+      assertResult(result, true, 1, 0);
+    });
+  });
 });

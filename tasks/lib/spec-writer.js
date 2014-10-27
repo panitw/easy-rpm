@@ -100,6 +100,20 @@ module.exports = function(spec, callback) {
   bufferTagIfExists(buffer, spec, 'prefix', 'Prefix');
   bufferTagIfExists(buffer, spec, 'buildRoot', 'BuildRoot');
 
+  if (spec.tags.sources.length > 0) {
+    if (spec.tags.sources.length === 1) {
+      buffer.add('Source: ' + spec.tags.sources[0]);
+    } else {
+      for (var i = 0; i < spec.tags.sources.length; i++) {
+        buffer.add('Source' + i + ': ' + spec.tags.sources[i]);
+      }
+    }
+  }
+
+  if (spec.tags.noSources.length > 0) {
+    buffer.add('NoSource: ' + spec.tags.noSources.join(', '));
+  }
+
   buffer.ensureEmptyLine();
   
   if (spec.tags.description !== null && spec.tags.description.length > 0) {
