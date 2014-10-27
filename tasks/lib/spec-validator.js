@@ -148,27 +148,42 @@ function validateSources(sources, result) {
   }
 }
 
-function validateNoSources(sources, nosources, result) {
-  var i, nosrc, nosrcInt, hasError = false, hasWarning = false;
-  for (i = 0; i < nosources.length; i++) {
+function _validateNoGeneric(list, indices, result, messages) {
+  var i, index, indexInt, hasError = false, hasWarning = false;
+  for (i = 0; i < indices.length; i++) {
     // No need for duplicate errors and/or warnings.
     if (hasError && hasWarning) {
       return;
     }
 
-    nosrc = nosources[i];
-    if (!validator.isInt(nosrc)) {
-      result.errors.push('NoSources values must be integral.');
+    index = indices[i];
+    if (!validator.isInt(index)) {
+      result.errors.push(messages.nonIntegralError);
       hasError = true;
     } else {
-      nosrcInt = validator.toInt(nosrc);
-      if (nosrcInt > (sources.length-1) || nosrcInt < 0) {
-        result.warnings.push('NoSource indexes should match to the Sources ' +
-            'with a zero-based index.');
+      indexInt = validator.toInt(index);
+      if (indexInt > (list.length-1) || indexInt < 0) {
+        result.warnings.push(messages.outOfRangeWarning);
         hasWarning = true;
       }
     }
   }
+}
+
+function validateNoSource(sources, nosources, result) {
+  _validateNoGeneric(sources, nosources, result, {
+    nonIntegralError: 'NoSource values must be integral.',
+    outOfRangeWarning: 'NoSource indices should match to the list of Sources ' +
+                       'with a zero-based index.'
+  });
+}
+
+function validateNoPatch(patches, nopatches, result) {
+  _validateNoGeneric(patches, nopatches, result, {
+    nonIntegralError: 'NoPatch values must be integral.',
+    outOfRangeWarning: 'NoPatch indices should match to the list of Patches ' +
+                       'with a zero-based index.'
+  });
 }
 
 module.exports = function(spec) {
@@ -195,7 +210,8 @@ module.exports = function(spec) {
   validatePrefix(spec.tags.prefix, result);
   validateBuildRoot(spec.tags.buildRoot, result);
   validateSources(spec.tags.sources, result);
-  validateNoSources(spec.tags.sources, spec.tags.noSources, result);
+  validateNoSource(spec.tags.sources, spec.tags.noSources, result);
+  validateNoPatch(spec.tags.patches, spec.tags.noPatches, result);
 
   // Set the valid property on the result for simple checking.
   result.valid = result.errors.length === 0;

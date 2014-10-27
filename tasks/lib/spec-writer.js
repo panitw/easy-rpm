@@ -48,7 +48,7 @@ function bufferTagIfExists(buffer, spec, tag, label) {
 }
 
 module.exports = function(spec, callback) {
-  var buffer = new LineBuffer();
+  var buffer = new LineBuffer(), i;
 
   buffer
     .add('Name: ' + spec.tags.name)
@@ -104,7 +104,7 @@ module.exports = function(spec, callback) {
     if (spec.tags.sources.length === 1) {
       buffer.add('Source: ' + spec.tags.sources[0]);
     } else {
-      for (var i = 0; i < spec.tags.sources.length; i++) {
+      for (i = 0; i < spec.tags.sources.length; i++) {
         buffer.add('Source' + i + ': ' + spec.tags.sources[i]);
       }
     }
@@ -112,6 +112,20 @@ module.exports = function(spec, callback) {
 
   if (spec.tags.noSources.length > 0) {
     buffer.add('NoSource: ' + spec.tags.noSources.join(', '));
+  }
+
+  if (spec.tags.patches.length > 0) {
+    if (spec.tags.patches.length === 1) {
+      buffer.add('Patch: ' + spec.tags.patches[0]);
+    } else {
+      for (i = 0; i < spec.tags.patches.length; i++) {
+        buffer.add('Patch' + i + ': ' + spec.tags.patches[i]);
+      }
+    }
+  }
+
+  if (spec.tags.noPatches.length > 0) {
+    buffer.add('NoPatch: ' + spec.tags.noPatches.join(', '));
   }
 
   buffer.ensureEmptyLine();

@@ -230,4 +230,51 @@ describe('spec writer', function() {
       assertEqualsExpectedFile(result, 'expect_10');
     });
   });
+
+  describe('patches', function() {
+    describe('with a single patch defined', function() {
+      it('should use an un-numbered patch tag', function() {
+        spec.addPatches('update-1.0.patch');
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_11');
+      });
+    });
+
+    describe('with multiple patches defined', function() {
+      it('should use numbered patch tags', function() {
+        spec.addPatches('update-1.0.patch', 'update-1.1.patch',
+          'update-1.4.patch');
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_12');
+      });
+    });
+  });
+
+  describe('nopatches', function() {
+    it('should produce a NoPatches tag when non-empty', function() {
+      spec.addPatches('update-1.0.patch', 'update-1.1.patch',
+        'update-1.4.patch');
+      spec.addNoPatches(0, 2);
+
+      specWriter(spec, function(out, err) {
+        result = out;
+        resultErr = err;
+      });
+
+      assert.strictEqual(resultErr, null, 'result error should be null');
+      assertEqualsExpectedFile(result, 'expect_13');
+    });
+  });
 });

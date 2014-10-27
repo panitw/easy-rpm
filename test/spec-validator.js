@@ -271,4 +271,20 @@ describe('validating spec property', function() {
       assertResult(result, true, 1, 0);
     });
   });
+
+  describe('nopatch tag', function() {
+    it('should produce an error if non-numeric', function() {
+      spec.addPatches('update-1.0.patch', 'update-1.1.patch');
+      spec.addNoPatches('0', 'alpha');
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+
+    it('should produce a warning if any index does not exist', function() {
+      spec.addPatches('update-1.0.patch', 'update-1.1.patch');
+      spec.addNoPatches(0, 2);
+      result = specValidator(spec);
+      assertResult(result, true, 1, 0);
+    });
+  });
 });

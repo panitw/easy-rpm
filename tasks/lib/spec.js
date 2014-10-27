@@ -141,7 +141,18 @@ var Spec = function() {
     // The nosource tag is used to direct RPM to omit one or more source files
     // from the source package.  More information at:
     // http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-tags.html
-    noSources: []
+    noSources: [],
+
+    // The patch tag is used to identify which patches are associated with the
+    // software being packaged. The patch files are kept in RPM's SOURCES
+    // directory, so only the name of the patch file should be specified.
+    patches: [],
+
+    // Just like the nosource tag, the nopatch tag is used to direct RPM to
+    // omit something from the source package. In the case of nosource, that
+    // "something" was one or more sources. For the nopatch tag, the
+    // "something" is one or more patches.
+    noPatches: []
   };
 };
 
@@ -192,6 +203,14 @@ Spec.prototype.addSources = function() {
 
 Spec.prototype.addNoSources = function() {
   this._bulkAddToTag('noSources', arguments);
+};
+
+Spec.prototype.addPatches = function() {
+  this._bulkAddToTag('patches', arguments);
+};
+
+Spec.prototype.addNoPatches = function() {
+  this._bulkAddToTag('noPatches', arguments);
 };
 
 module.exports = Spec;
