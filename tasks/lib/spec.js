@@ -97,19 +97,52 @@ var Spec = function() {
     // instead set to 'no'.
     autoReq: true,
     autoProv: true,
+
+    // The excludearch tag directs RPM to ensure that the package does not
+    // attempt to build on the excluded architecture(s). One or more
+    // architectures may be specified after the excludearch tag, separated by
+    // either spaces or commas.
+    excludeArchs: [],
+
+    // The exclusivearch tag is used to direct RPM to ensure the package is
+    // only built on the specified architecture(s). One or more architectures
+    // may be specified after the exclusivearch tag, separated by either spaces
+    // or commas.
+    exclusiveArchs: []
   };
 };
 
-Spec.prototype.addRequirements = function() {
-  for (var i = 0; i < arguments.length; i++) {
-    this.tags.requires.push(arguments[i]);
+/**
+ * Adds the contents of args, which should be an Arguments object, to the
+ * tag specified by tagName.  If the tagName property does not exist on the
+ * spec.tags object, or it is not an array, an error is thrown.
+ */
+Spec.prototype._bulkAddToTag = function(tagName, args) {
+  if (this.tags.hasOwnProperty(tagName) &&
+      this.tags[tagName].constructor === Array) {
+    var tagArray = this.tags[tagName], i;
+    for (i = 0; i < args.length; i++) {
+      tagArray.push(args[i]);
+    }
+  } else {
+    throw new Error('Tag property must exist and must be an array.');
   }
 };
 
+Spec.prototype.addRequirements = function() {
+  this._bulkAddToTag('requires', arguments);
+};
+
 Spec.prototype.addConflicts = function() {
-  for (var i = 0; i < arguments.length; i++) {
-    this.tags.conflicts.push(arguments[i]);
-  }
+  this._bulkAddToTag('conflicts', arguments);
+};
+
+Spec.prototype.addExcludeArchs = function() {
+  this._bulkAddToTag('excludeArchs', arguments);
+};
+
+Spec.prototype.addExclusiveArchs = function() {
+  this._bulkAddToTag('exclusiveArchs', arguments);
 };
 
 module.exports = Spec;

@@ -52,6 +52,8 @@ describe('spec writer', function() {
     });
   });
 
+  // Note that this test basically ensures that tags with no specific output
+  // needs are written as expected.
   describe('given all (most) tags', function() {
     it('should produce the correct spec', function() {
       spec.tags.summary = 'Easily create RPM packages.';
@@ -67,6 +69,8 @@ describe('spec writer', function() {
       spec.tags.autoProv = false;
       spec.addRequirements('quux > 1.6.9', 'k9 <= 2.0');
       spec.addConflicts('quux = 1.6.9', 'baz < 1.2');
+      spec.addExcludeArchs('sparc', 'alpha');
+      spec.addExclusiveArchs('x86', 'powerpc');
 
       specWriter(spec, function(out, err) {
         result = out;

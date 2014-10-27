@@ -80,6 +80,14 @@ module.exports = function(spec, callback) {
     buffer.add('AutoProv: no');
   }
 
+  if (spec.tags.excludeArchs.length > 0) {
+    buffer.add('ExcludeArch: ' + spec.tags.excludeArchs.join(', '));
+  }
+
+  if (spec.tags.exclusiveArchs.length > 0) {
+    buffer.add('ExclusiveArch: ' + spec.tags.exclusiveArchs.join(', '));
+  }
+
   buffer.ensureEmptyLine();
   
   if (spec.tags.description !== null && spec.tags.description.length > 0) {

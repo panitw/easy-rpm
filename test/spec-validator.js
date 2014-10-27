@@ -192,4 +192,22 @@ describe('validating spec property', function() {
       assertResult(result, false, 2, 2);
     });
   });
+
+  describe('architecture tags', function() {
+    it('should produce a warning if the same arch is in both exclude and ' +
+      'exclusive lists', function() {
+      spec.addExcludeArchs('sparc', 'alpha');
+      spec.addExclusiveArchs('x86', 'alpha');
+      result = specValidator(spec);
+      assertResult(result, true, 1, 0);
+    });
+
+    it('should produce no warnings if there is no arch in both exclude and ' +
+      'exclusive lists', function() {
+      spec.addExcludeArchs('sparc', 'powerpc');
+      spec.addExclusiveArchs('x86', 'alpha');
+      result = specValidator(spec);
+      assertResultValid(result);
+    });
+  });
 });

@@ -99,6 +99,20 @@ function validateAutoProv(value, result) {
   }
 }
 
+function validateArchs(exclude, exclusive, result) {
+  var i, j, ex;
+  for (i = 0; i < exclude.length; i++) {
+    ex = exclude[i];
+    for (j = 0; j < exclusive.length; j++) {
+      if (ex === exclusive[j]) {
+        result.warnings.push('One or more architectures exist in both the ' +
+            'exclude and exclusive lists.');
+        return;
+      }
+    }
+  }
+}
+
 module.exports = function(spec) {
   var result = {
     warnings: [],
@@ -118,6 +132,7 @@ module.exports = function(spec) {
   validatePackager(spec.tags.packager, result);
   validateAutoReq(spec.tags.autoReq, result);
   validateAutoProv(spec.tags.autoProv, result);
+  validateArchs(spec.tags.excludeArchs, spec.tags.exclusiveArchs, result);
 
   // Set the valid property on the result for simple checking.
   result.valid = result.errors.length === 0;
