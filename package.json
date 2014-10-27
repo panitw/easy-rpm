@@ -34,7 +34,8 @@
   "dependencies": {
     "grunt": "~0.4.5",
     "shortid": "~2.0.1",
-    "validator": "^3.22.0"
+    "validator": "^3.22.0",
+    "valid-url": "^1.0.9"
   },
   "devDependencies": {
     "grunt": "~0.4.5",

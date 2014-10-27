@@ -55,6 +55,13 @@ var Spec = function() {
     // of an organization.
     vendor: null,
 
+    // The url tag is used to define a Uniform Resource Locator that can be
+    // used to obtain additional information about the packaged software. At
+    // present, RPM doesn't actively make use of this tag. The data is stored
+    // in the package however, and will be written into RPM's database when the
+    // package is installed.
+    url: null,
+
     // The group tag is used to group packages together by the types of
     // functionality they provide. The group specification looks like a path
     // and is similar in function, in that it specifies more general groupings

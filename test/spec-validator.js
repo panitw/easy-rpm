@@ -142,6 +142,14 @@ describe('validating spec property', function() {
     });
   });
 
+  describe('url', function() {
+    it('should produce a warning when not a valid url', function() {
+      spec.tags.url = 'http:/google.com';
+      result = specValidator(spec);
+      assertResult(result, true, 1, 0);
+    });
+  });
+
   describe('group', function() {
     it('should produce an error when it contains a newline', function() {
       spec.tags.group = 'fooware\nltd.';

@@ -60,6 +60,7 @@ describe('spec writer', function() {
       spec.tags.distribution = 'grunt';
       spec.tags.icon = 'easyrpm.png';
       spec.tags.vendor = 'EasyRPM Inc.';
+      spec.tags.url = 'http://www.google.com/';
       spec.tags.group = 'Applications/Productivity';
       spec.tags.packager = 'Dr. Foo <foo@tardis.com>';
       spec.tags.autoReq = false;

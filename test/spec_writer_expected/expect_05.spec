@@ -7,6 +7,7 @@ Epoch: 23
 Distribution: grunt
 Icon: easyrpm.png
 Vendor: EasyRPM Inc.
+URL: http://www.google.com/
 Group: Applications/Productivity
 Packager: Dr. Foo <foo@tardis.com>
 Requires: quux > 1.6.9, k9 <= 2.0

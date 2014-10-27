@@ -60,6 +60,7 @@ module.exports = function(spec, callback) {
   bufferTagIfExists(buffer, spec, 'distribution', 'Distribution');
   bufferTagIfExists(buffer, spec, 'icon', 'Icon');
   bufferTagIfExists(buffer, spec, 'vendor', 'Vendor');
+  bufferTagIfExists(buffer, spec, 'url', 'URL');
   bufferTagIfExists(buffer, spec, 'group', 'Group');
   bufferTagIfExists(buffer, spec, 'packager', 'Packager');
 

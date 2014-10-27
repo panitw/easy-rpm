@@ -1,4 +1,5 @@
-var validator = require('validator');
+var validator = require('validator'),
+    urlvalidator = require('valid-url');
 
 function validateName(value, result) {
   if (!validator.isLength(value, 1)) {
@@ -67,6 +68,13 @@ function validateVendor(value, result) {
   }
 }
 
+function validateURL(value, result) {
+  if (validator.isLength(value, 1) &&
+      urlvalidator.isWebUri(value) === undefined) {
+    result.warnings.push('URL appears to be invalid.');
+  }
+}
+
 function validateGroup(value, result) {
   if (validator.contains(value, '\n')) {
     result.errors.push('Group tag cannot contain linebreaks.');
@@ -105,6 +113,7 @@ module.exports = function(spec) {
   validateEpoch(spec.tags.epoch, result);
   validateDistribution(spec.tags.distribution, result);
   validateVendor(spec.tags.vendor, result);
+  validateURL(spec.tags.url, result);
   validateGroup(spec.tags.group, result);
   validatePackager(spec.tags.packager, result);
   validateAutoReq(spec.tags.autoReq, result);
