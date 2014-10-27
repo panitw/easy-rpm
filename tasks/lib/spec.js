@@ -117,7 +117,21 @@ var Spec = function() {
     // The exclusiveos tag has the same syntax as excludeos, but it has the
     // opposite logic. The exclusiveos tag is used to denote which operating
     // system(s) should only be be permitted to build the package.
-    exclusiveOS: []
+    exclusiveOS: [],
+
+    // The prefix tag is used when a relocatable package is to be built.
+    // A relocatable package can be installed normally or can be installed in
+    // a user-specified directory, by using RPM's --prefix install-time option.
+    // The data specified after the prefix tag should be the part of the
+    // package's path that may be changed during installation.
+    prefix: null,
+
+    // The buildroot tag is used to define an alternate build root. The name is
+    // a bit misleading, as the build root is actually used when the software
+    // is installed during the build process. In order for a build root to be
+    // defined and actually used, a number of issues must be taken into account.
+    // See http://www.rpm.org/max-rpm-snapshot/ch-rpm-anywhere.html
+    buildRoot: null
   };
 };
 

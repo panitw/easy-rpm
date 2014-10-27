@@ -97,6 +97,9 @@ module.exports = function(spec, callback) {
     buffer.add('ExclusiveOS: ' + spec.tags.exclusiveOS.join(', '));
   }
 
+  bufferTagIfExists(buffer, spec, 'prefix', 'Prefix');
+  bufferTagIfExists(buffer, spec, 'buildRoot', 'BuildRoot');
+
   buffer.ensureEmptyLine();
   
   if (spec.tags.description !== null && spec.tags.description.length > 0) {

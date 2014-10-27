@@ -127,6 +127,18 @@ function validateOS(exclude, exclusive, result) {
   }
 }
 
+function validatePrefix(value, result) {
+  if (validator.contains(value, '\n')) {
+    result.errors.push('Prefix tag cannot contain linebreaks.');
+  }
+}
+
+function validateBuildRoot(value, result) {
+  if (validator.contains(value, '\n')) {
+    result.errors.push('BuildRoot tag cannot contain linebreaks.');
+  }
+}
+
 module.exports = function(spec) {
   var result = {
     warnings: [],
@@ -148,6 +160,8 @@ module.exports = function(spec) {
   validateAutoProv(spec.tags.autoProv, result);
   validateArchs(spec.tags.excludeArchs, spec.tags.exclusiveArchs, result);
   validateOS(spec.tags.excludeOS, spec.tags.exclusiveOS, result);
+  validatePrefix(spec.tags.prefix, result);
+  validateBuildRoot(spec.tags.buildRoot, result);
 
   // Set the valid property on the result for simple checking.
   result.valid = result.errors.length === 0;

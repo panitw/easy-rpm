@@ -17,3 +17,5 @@ ExcludeArch: sparc, alpha
 ExclusiveArch: x86, powerpc
 ExcludeOS: linux, irix
 ExclusiveOS: bsd, solaris
+Prefix: /opt/easyrpm
+BuildRoot: /tmp/easyrpm

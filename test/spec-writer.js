@@ -73,6 +73,8 @@ describe('spec writer', function() {
       spec.addExclusiveArchs('x86', 'powerpc');
       spec.addExcludeOS('linux', 'irix');
       spec.addExclusiveOS('bsd', 'solaris');
+      spec.tags.prefix = '/opt/easyrpm';
+      spec.tags.buildRoot = '/tmp/easyrpm';
 
       specWriter(spec, function(out, err) {
         result = out;

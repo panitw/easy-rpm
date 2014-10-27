@@ -228,4 +228,20 @@ describe('validating spec property', function() {
       assertResultValid(result);
     });
   });
+
+  describe('prefix', function() {
+    it('should produce an error when it contains a newline', function() {
+      spec.tags.prefix = '/opt/\nfoo/bar';
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+  });
+
+  describe('buildRoot', function() {
+    it('should produce an error when it contains a newline', function() {
+      spec.tags.prefix = '/tmp/\nbuild/root';
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+  });
 });
