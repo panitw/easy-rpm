@@ -158,9 +158,17 @@ describe('validating spec property', function() {
     });
   });
 
-  describe('autoReqProv', function() {
+  describe('autoReq', function() {
     it('should produce an error when not a boolean', function() {
-      spec.tags.autoReqProv = 'no';
+      spec.tags.autoReq = 'no';
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+  });
+
+  describe('autoProv', function() {
+    it('should produce an error when not a boolean', function() {
+      spec.tags.autoProv = 'no';
       result = specValidator(spec);
       assertResult(result, false, 0, 1);
     });

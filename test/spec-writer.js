@@ -52,7 +52,7 @@ describe('spec writer', function() {
     });
   });
 
-  describe('given all tags', function() {
+  describe('given all (most) tags', function() {
     it('should produce the correct spec', function() {
       spec.tags.summary = 'Easily create RPM packages.';
       spec.tags.license = 'MIT';
@@ -62,7 +62,8 @@ describe('spec writer', function() {
       spec.tags.vendor = 'EasyRPM Inc.';
       spec.tags.group = 'Applications/Productivity';
       spec.tags.packager = 'Dr. Foo <foo@tardis.com>';
-      spec.tags.autoReqProv = false;
+      spec.tags.autoReq = false;
+      spec.tags.autoProv = false;
       spec.addRequirements('quux > 1.6.9', 'k9 <= 2.0');
       spec.addConflicts('quux = 1.6.9', 'baz < 1.2');
 
@@ -76,9 +77,56 @@ describe('spec writer', function() {
     });
   });
 
-  describe('tag AutoReqProv', function() {
-    it('should produce a tag iif set to false', function() {
-        spec.tags.autoReqProv = false;
+  describe('auto tags', function() {
+    describe('when autoReq is true and autoProv is true', function() {
+      it('should not produce any Auto* tags', function() {
+        spec.tags.autoProv = true;
+        spec.tags.autoReq = true;
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_01');
+      });
+    });
+
+    describe('when autoReq is false and autoProv is true', function() {
+      it('should only produce the AutoReq tag', function() {
+        spec.tags.autoProv = true;
+        spec.tags.autoReq = false;
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_06');
+      });
+    });
+
+    describe('when autoReq is true and autoProv is false', function() {
+      it('should only produce the AutoProv tag', function() {
+        spec.tags.autoProv = false;
+        spec.tags.autoReq = true;
+
+        specWriter(spec, function(out, err) {
+          result = out;
+          resultErr = err;
+        });
+
+        assert.strictEqual(resultErr, null, 'result error should be null');
+        assertEqualsExpectedFile(result, 'expect_07');
+      });
+    });
+
+    describe('when autoReq is false and autoProv is false', function() {
+      it('should only produce the AutoReqProv tag', function() {
+        spec.tags.autoProv = false;
+        spec.tags.autoReq = false;
 
         specWriter(spec, function(out, err) {
           result = out;
@@ -87,19 +135,7 @@ describe('spec writer', function() {
 
         assert.strictEqual(resultErr, null, 'result error should be null');
         assertEqualsExpectedFile(result, 'expect_04');
-    });
-
-    it('should not produce a tag when not set to false', function() {
-      spec.tags.autoReqProv = true;
-
-      specWriter(spec, function(out, err) {
-        result = out;
-        resultErr = err;
       });
-
-      assert.strictEqual(resultErr, null, 'result error should be null');
-      assertNotEqualsExpectedFile(result, 'expect_04');
-      assertEqualsExpectedFile(result, 'expect_01');
     });
   });
 

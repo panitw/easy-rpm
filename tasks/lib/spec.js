@@ -84,9 +84,12 @@ var Spec = function() {
     // to operate properly.
     conflicts: [],
 
-    // The autoreqprov tag is used to control the automatic dependency
-    // processing performed when the package is being built.
-    autoReqProv: true
+    // The autoreqprov, autoreq, and autoprov tags are used to control the
+    // automatic dependency processing performed when the package is being
+    // built. When both of these are set to false, the AutoReqProv tag is
+    // instead set to 'no'.
+    autoReq: true,
+    autoProv: true,
   };
 };
 

@@ -71,8 +71,12 @@ module.exports = function(spec, callback) {
     buffer.add('Conflicts: ' + spec.tags.conflicts.join(', '));
   }
 
-  if (spec.tags.autoReqProv === false) {
+  if (spec.tags.autoReq === false && spec.tags.autoProv === false) {
     buffer.add('AutoReqProv: no');
+  } else if (spec.tags.autoReq === false) {
+    buffer.add('AutoReq: no');
+  } else if (spec.tags.autoProv === false) {
+    buffer.add('AutoProv: no');
   }
 
   buffer.ensureEmptyLine();

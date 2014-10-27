@@ -79,9 +79,15 @@ function validatePackager(value, result) {
   }
 }
 
-function validateAutoReqProv(value, result) {
+function validateAutoReq(value, result) {
   if (typeof(value) !== 'boolean') {
-    result.errors.push('AutoReqProv must be specified as a boolean.');
+    result.errors.push('AutoReq must be specified as a boolean.');
+  }
+}
+
+function validateAutoProv(value, result) {
+  if (typeof(value) !== 'boolean') {
+    result.errors.push('AutoProv must be specified as a boolean.');
   }
 }
 
@@ -101,7 +107,8 @@ module.exports = function(spec) {
   validateVendor(spec.tags.vendor, result);
   validateGroup(spec.tags.group, result);
   validatePackager(spec.tags.packager, result);
-  validateAutoReqProv(spec.tags.autoReqProv, result);
+  validateAutoReq(spec.tags.autoReq, result);
+  validateAutoProv(spec.tags.autoProv, result);
 
   // Set the valid property on the result for simple checking.
   result.valid = result.errors.length === 0;
