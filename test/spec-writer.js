@@ -7,7 +7,7 @@ var assert = require('assert'),
 
 function assertExpectedFile(result, expectFile, assertion) {
   var expected = fs.readFileSync(
-      'test/spec-writer-expected/' + expectFile + '.txt', {encoding: 'utf8'});
+      'test/spec_writer_expected/' + expectFile + '.spec', {encoding: 'utf8'});
   // Note that the comparisson here ignores leading and trailing whitespace on
   // the entirety of the strings.  It seems that rpmbuilder does not care about
   // this.
@@ -55,7 +55,8 @@ describe('spec writer', function() {
   describe('given all tags', function() {
     it('should produce the correct spec', function() {
       spec.tags.summary = 'Easily create RPM packages.';
-      spec.tags.copyright = 'MIT';
+      spec.tags.license = 'MIT';
+      spec.tags.epoch = 23;
       spec.tags.distribution = 'grunt';
       spec.tags.icon = 'easyrpm.png';
       spec.tags.vendor = 'EasyRPM Inc.';
@@ -121,7 +122,7 @@ describe('spec writer', function() {
 
     describe('with additional tags', function() {
       it('should place the description after all single-line tags', function() {
-        spec.tags.copyright = 'MIT';
+        spec.tags.license = 'MIT';
         spec.tags.vendor = 'easyrpm';
         spec.tags.description = 'Description line one.\n' +
                                 'Description line two.\n\n' +

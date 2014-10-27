@@ -2,7 +2,8 @@ Name: easyrpm
 Version: 0.0.1
 Release: 21
 Summary: Easily create RPM packages.
-Copyright: MIT
+License: MIT
+Epoch: 23
 Distribution: grunt
 Icon: easyrpm.png
 Vendor: EasyRPM Inc.

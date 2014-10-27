@@ -37,9 +37,14 @@ var Spec = function() {
     // packaged software.
     summary: null,
 
-    // The copyright tag is used to define the copyright terms applicable to
-    // the software being packaged.
-    copyright: null,
+    // The license tag is used to define the license terms applicable to
+    // the software being packaged.  This is also known as the copyright tag.
+    license: null,
+
+    // The epoch tag is another part of RPM's dependency upgrade processing.
+    // Consult the documentation on the RPM spec for its use.  It should be
+    // an integer value.
+    epoch: null,
 
     // The distribution tag is used to define a group of packages, of which
     // this package is a part.

@@ -16,7 +16,7 @@ function validSpec() {
 
 function assertResult(result, expectValid, expectWarnings, expectErrors) {
   assert.strictEqual(result.valid, expectValid,
-      'result should be valid');
+      'result should be ' + (expectValid ? 'valid' : 'invalid'));
   assert.strictEqual(result.warnings.length, expectWarnings,
       'result warning count should be ' + expectWarnings);
   assert.strictEqual(result.errors.length, expectErrors,
@@ -104,9 +104,23 @@ describe('validating spec property', function() {
     });
   });
 
-  describe('copyright', function() {
+  describe('license', function() {
     it('should produce an error when it contains a newline', function() {
-      spec.tags.copyright = 'GPL\nMIT';
+      spec.tags.license = 'GPL\nMIT';
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+  });
+
+  describe('epoch', function() {
+    it('should produce an error when non-integral', function() {
+      spec.tags.epoch = 'abc';
+      result = specValidator(spec);
+      assertResult(result, false, 0, 1);
+    });
+
+    it('should produce an error when signed', function() {
+      spec.tags.epoch = -3;
       result = specValidator(spec);
       assertResult(result, false, 0, 1);
     });

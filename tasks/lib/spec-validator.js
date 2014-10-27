@@ -40,9 +40,18 @@ function validateSummary(value, result) {
   }
 }
 
-function validateCopyright(value, result) {
+function validateLicense(value, result) {
   if (validator.contains(value, '\n')) {
-    result.errors.push('Copyright tag cannot contain linebreaks.');
+    result.errors.push('License tag cannot contain linebreaks.');
+  }
+}
+
+function validateEpoch(value, result) {
+  if (validator.isLength(value, 1)) { 
+    var int_value = validator.toInt(value);
+    if (isNaN(int_value) || int_value < 0) {
+      result.errors.push('Epoch tag must be an unsigned integer.');
+    }
   }
 }
 
@@ -86,7 +95,8 @@ module.exports = function(spec) {
   validateVersion(spec.tags.version, result);
   validateRelease(spec.tags.release, result);
   validateSummary(spec.tags.summary, result);
-  validateCopyright(spec.tags.copyright, result);
+  validateLicense(spec.tags.license, result);
+  validateEpoch(spec.tags.epoch, result);
   validateDistribution(spec.tags.distribution, result);
   validateVendor(spec.tags.vendor, result);
   validateGroup(spec.tags.group, result);

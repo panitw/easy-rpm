@@ -1,15 +1,33 @@
 var LineBuffer = function() {
   this.lines = [];
+  this.ensureEmpty = false;
 };
 
 LineBuffer.prototype.add = function(line) {
+  // If the ensure empty line flag is set and the line currently being added
+  // is itself non-empty, push a newline beforehand.
+  if (line !== '' && this.ensureEmpty) {
+    this.newline();
+  }
+
   this.lines.push(line);
+
   return this;
 };
 
 LineBuffer.prototype.newline = function() {
   this.lines.push('');
+
+  // Clear the ensure empty line flag; we have one now.
+  if (this.ensureEmpty) {
+    this.ensureEmpty = false;
+  }
+
   return this;
+};
+
+LineBuffer.prototype.ensureEmptyLine = function() {
+  this.ensureEmpty = true;
 };
 
 LineBuffer.prototype.string = function() {
@@ -19,8 +37,11 @@ LineBuffer.prototype.string = function() {
 function bufferTagIfExists(buffer, spec, tag, label) {
   if (spec.tags.hasOwnProperty(tag)) {
     var value = spec.tags[tag];
-    if (value !== null && value.length > 0) {
-      buffer.add(label + ': ' + value);
+    if (value !== null) {
+      if ((typeof value === 'string' && value.length > 0) ||
+          typeof value === 'number') {
+        buffer.add(label + ': ' + value);
+      }
     }
   }
 }
@@ -34,7 +55,8 @@ module.exports = function(spec, callback) {
     .add('Release: ' + spec.tags.release);
 
   bufferTagIfExists(buffer, spec, 'summary', 'Summary');
-  bufferTagIfExists(buffer, spec, 'copyright', 'Copyright');
+  bufferTagIfExists(buffer, spec, 'license', 'License');
+  bufferTagIfExists(buffer, spec, 'epoch', 'Epoch');
   bufferTagIfExists(buffer, spec, 'distribution', 'Distribution');
   bufferTagIfExists(buffer, spec, 'icon', 'Icon');
   bufferTagIfExists(buffer, spec, 'vendor', 'Vendor');
@@ -52,14 +74,16 @@ module.exports = function(spec, callback) {
   if (spec.tags.autoReqProv === false) {
     buffer.add('AutoReqProv: no');
   }
+
+  buffer.ensureEmptyLine();
   
   if (spec.tags.description !== null && spec.tags.description.length > 0) {
     buffer
-      .newline()
       .add('%description')
-      .add(spec.tags.description)
-      .newline();
+      .add(spec.tags.description);
   }
+  
+  buffer.ensureEmptyLine();
 
   callback(buffer.string(), null);
 };
