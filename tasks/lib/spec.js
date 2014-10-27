@@ -108,7 +108,16 @@ var Spec = function() {
     // only built on the specified architecture(s). One or more architectures
     // may be specified after the exclusivearch tag, separated by either spaces
     // or commas.
-    exclusiveArchs: []
+    exclusiveArchs: [],
+
+    // The excludeos tag is used to direct RPM to ensure that the package does
+    // not attempt to build on the excluded operating system(s).
+    excludeOS: [],
+
+    // The exclusiveos tag has the same syntax as excludeos, but it has the
+    // opposite logic. The exclusiveos tag is used to denote which operating
+    // system(s) should only be be permitted to build the package.
+    exclusiveOS: []
   };
 };
 
@@ -143,6 +152,14 @@ Spec.prototype.addExcludeArchs = function() {
 
 Spec.prototype.addExclusiveArchs = function() {
   this._bulkAddToTag('exclusiveArchs', arguments);
+};
+
+Spec.prototype.addExcludeOS = function() {
+  this._bulkAddToTag('excludeOS', arguments);
+};
+
+Spec.prototype.addExclusiveOS = function() {
+  this._bulkAddToTag('exclusiveOS', arguments);
 };
 
 module.exports = Spec;

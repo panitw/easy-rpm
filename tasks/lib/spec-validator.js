@@ -99,17 +99,31 @@ function validateAutoProv(value, result) {
   }
 }
 
-function validateArchs(exclude, exclusive, result) {
-  var i, j, ex;
-  for (i = 0; i < exclude.length; i++) {
-    ex = exclude[i];
-    for (j = 0; j < exclusive.length; j++) {
-      if (ex === exclusive[j]) {
-        result.warnings.push('One or more architectures exist in both the ' +
-            'exclude and exclusive lists.');
-        return;
+function existsAnIntersection(a, b) {
+  var i, j, check;
+  for (i = 0; i < a.length; i++) {
+    check = a[i];
+    for (j = 0; j < b.length; j++) {
+      if (check === b[j]) {
+        return true;
       }
     }
+  }
+
+  return false;
+}
+
+function validateArchs(exclude, exclusive, result) {
+  if (existsAnIntersection(exclude, exclusive)) {
+    result.warnings.push('One or more architectures exist in both the ' +
+        'exclude and exclusive lists.');
+  }
+}
+
+function validateOS(exclude, exclusive, result) {
+  if (existsAnIntersection(exclude, exclusive)) {
+    result.warnings.push('One or more OSes exist in both the exclude and ' +
+        'exclusive lists.');
   }
 }
 
@@ -133,6 +147,7 @@ module.exports = function(spec) {
   validateAutoReq(spec.tags.autoReq, result);
   validateAutoProv(spec.tags.autoProv, result);
   validateArchs(spec.tags.excludeArchs, spec.tags.exclusiveArchs, result);
+  validateOS(spec.tags.excludeOS, spec.tags.exclusiveOS, result);
 
   // Set the valid property on the result for simple checking.
   result.valid = result.errors.length === 0;

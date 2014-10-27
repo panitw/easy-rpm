@@ -210,4 +210,22 @@ describe('validating spec property', function() {
       assertResultValid(result);
     });
   });
+
+  describe('os tags', function() {
+    it('should produce a warning if the same OS is in both exclude and ' +
+      'exclusive lists', function() {
+      spec.addExcludeOS('linux', 'irix');
+      spec.addExclusiveOS('irix', 'solaris');
+      result = specValidator(spec);
+      assertResult(result, true, 1, 0);
+    });
+
+    it('should produce no warnings if there is no OS in both exclude and ' +
+      'exclusive lists', function() {
+      spec.addExcludeOS('linux', 'irix');
+      spec.addExclusiveOS('bsd', 'solaris');
+      result = specValidator(spec);
+      assertResultValid(result);
+    });
+  });
 });

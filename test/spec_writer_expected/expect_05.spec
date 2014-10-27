@@ -15,3 +15,5 @@ Conflicts: quux = 1.6.9, baz < 1.2
 AutoReqProv: no
 ExcludeArch: sparc, alpha
 ExclusiveArch: x86, powerpc
+ExcludeOS: linux, irix
+ExclusiveOS: bsd, solaris

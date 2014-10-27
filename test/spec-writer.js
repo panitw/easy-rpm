@@ -71,6 +71,8 @@ describe('spec writer', function() {
       spec.addConflicts('quux = 1.6.9', 'baz < 1.2');
       spec.addExcludeArchs('sparc', 'alpha');
       spec.addExclusiveArchs('x86', 'powerpc');
+      spec.addExcludeOS('linux', 'irix');
+      spec.addExclusiveOS('bsd', 'solaris');
 
       specWriter(spec, function(out, err) {
         result = out;

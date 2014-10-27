@@ -88,6 +88,14 @@ module.exports = function(spec, callback) {
     buffer.add('ExclusiveArch: ' + spec.tags.exclusiveArchs.join(', '));
   }
 
+  if (spec.tags.excludeOS.length > 0) {
+    buffer.add('ExcludeOS: ' + spec.tags.excludeOS.join(', '));
+  }
+
+  if (spec.tags.exclusiveOS.length > 0) {
+    buffer.add('ExclusiveOS: ' + spec.tags.exclusiveOS.join(', '));
+  }
+
   buffer.ensureEmptyLine();
   
   if (spec.tags.description !== null && spec.tags.description.length > 0) {
