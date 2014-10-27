@@ -21,8 +21,12 @@ function preserveCopy(grunt, srcpath, destpath, options) {
     }
 }
 
-function writeSpecFile(grunt, files, attrs, options) {
+function processFile(grunt,obj) {
+    var template = "<%= (dir == true) ? '%dir ' : '' %>%attr(<%= mode || '-' %>,<%= owner || '-' %>,<%= group || '-' %>)<%= config == true ? '%config' : ''%><%= ( doc == true) ? ' %doc' : '' %> <%= file %>";
+    return grunt.template.process(template, { data: obj });
+}
 
+function writeSpecFile(grunt, files, options) {
     var pkgName = options.name + "-" + options.version + "-" + options.buildArch,
         specFilepath = path.join(options.tempDir, "SPECS", pkgName + ".spec"),
         b = [],
@@ -62,6 +66,24 @@ function writeSpecFile(grunt, files, attrs, options) {
     b.push("%description");
     b.push(options.description);
 
+	b.push("");
+	b.push("%changelog");
+	
+	if (typeof options.changelog === "object") {
+		if (options.changelog.length > 0) {
+			for (i = 0; i < options.changelog.length; i++) {
+				b.push(options.changelog[i]);
+			}
+		}
+	} else if (typeof options.changelog === "function") {
+		var changelog_lines = options.changelog();
+		if (changelog_lines.length > 0) {
+			for ( i = 0; i < changelog_lines.length; i++) {
+				b.push(changelog_lines[i]);
+			}
+		}
+	}
+
     b.push("");
     b.push("%files");
     for (i = 0; i < files.length; i++) {
@@ -76,18 +98,9 @@ function writeSpecFile(grunt, files, attrs, options) {
         }
     }
 
-    if (attrs.length > 0 || options.postInstallScript.length > 0) {
+    if (options.postInstallScript.length > 0) {
         b.push("");
         b.push("%post");
-    }
-    
-    if (attrs.length > 0) {
-        for (i = 0; i < attrs.length; i++) {
-            b.push(attrs[i]);
-        }
-    }
-
-    if (options.postInstallScript.length > 0) {
         for (i = 0; i < options.postInstallScript.length; i++) {
             b.push(options.postInstallScript[i]);
         }
@@ -131,6 +144,7 @@ module.exports = function(grunt) {
                 vendor: "Vendor",
                 group: "Development/Tools",
                 buildArch: "noarch",
+                changelog: [],
                 dependencies: [],
                 preInstallScript: [],
                 postInstallScript: [],
@@ -172,8 +186,7 @@ module.exports = function(grunt) {
 
         //Copy source to the BUILDROOT folder
         grunt.log.writeln("Copying files to tmp directory");
-        var fileBasket = [],
-            attrBasket = [];
+        var fileBasket = [];
         this.files.forEach(function(file) {
 
             //All file entry should have both "src" and "dest"
@@ -204,35 +217,15 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln("Copying: " + actualSrcPath);
                     preserveCopy(grunt, actualSrcPath, copyTargetPath);
 
-                    if (options.quoteFilePaths) {
-                        actualTargetPath = "\"" + actualTargetPath + "\"";
-                    }
-
-                    if (file.config) {
-                        fileBasket.push("%config " + actualTargetPath);
-                    } else if (file.doc) {
-                        fileBasket.push("%doc " + actualTargetPath);
-                    } else {
-                        fileBasket.push(actualTargetPath);
-                    }
-
-                    //If "mode" property is defined, then add the post install script to change
-                    //the mode of the file
-                    if (file.mode) {
-                        attrBasket.push("chmod " + file.mode + " " + actualTargetPath);
-                    }
-
-                    //If "owner" property is defined, then add the post install script to change
-                    //the owner of the file
-                    if (file.owner) {
-                        attrBasket.push("chown " + file.owner + " " + actualTargetPath);
-                    }
-
-                    //If "group" property is defined, then add the post install script to change
-                    //the group of the file
-                    if (file.group) {
-                        attrBasket.push("chgrp " + file.group + " " + actualTargetPath);
-                    }
+		    fileBasket.push(processFile(grunt,{ 
+			config: file.config || false,
+			doc: file.doc || false,
+			mode: file.mode || false,
+			owner: file.owner || "root",
+			group: file.group || "root",
+			dir: false,
+			file: actualTargetPath
+		    }));
                 } else {
                     // save to filebasket for later use
                     grunt.verbose.writeln("Creating directory: " + actualSrcPath);
@@ -244,8 +237,7 @@ module.exports = function(grunt) {
 
         //Generate SPEC file
         grunt.log.writeln("Generating RPM spec file");
-        var specFilepath = writeSpecFile(grunt, fileBasket, attrBasket,
-            options);
+        var specFilepath = writeSpecFile(grunt, fileBasket, options);
 
         //Build RPM
         grunt.log.writeln("Building RPM package");
