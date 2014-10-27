@@ -28,6 +28,7 @@ LineBuffer.prototype.newline = function() {
 
 LineBuffer.prototype.ensureEmptyLine = function() {
   this.ensureEmpty = true;
+  return this;
 };
 
 LineBuffer.prototype.string = function() {
