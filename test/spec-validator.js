@@ -243,7 +243,7 @@ describe('validating spec property', function() {
 
     describe('buildRoot', function() {
         it('should produce an error when it contains a newline', function() {
-            spec.tags.prefix = '/tmp/\nbuild/root';
+            spec.tags.buildRoot = '/tmp/\nbuild/root';
             result = specValidator(spec);
             assertResult(result, false, 0, 1);
         });
