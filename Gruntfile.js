@@ -54,23 +54,23 @@ module.exports = function(grunt) {
         },
 
         mochaTest: {
-          test: {
-            options: {
-              reporter: 'dot',
-              clearRequireCache: true
-            },
-            src: ['test/**/*.js']
-          }
+            test: {
+                options: {
+                    reporter: 'dot',
+                    clearRequireCache: true
+                },
+                src: ['test/**/*.js']
+            }
         },
 
         watch: {
-          js: {
-            options: {
-              spawn: false
-            },
-            files: '**/*.js',
-            tasks: ['mochaTest']
-          }
+            js: {
+                options: {
+                    spawn: false
+                },
+                files: '**/*.js',
+                tasks: ['mochaTest']
+            }
         }
     });
 
@@ -86,10 +86,10 @@ module.exports = function(grunt) {
     // Handle watch events and setup the mochaTest task options accordingly.
     var defaultTestSrc = grunt.config('mochaTest.test.src');
     grunt.event.on('watch', function(action, filepath) {
-      grunt.config('mochaTest.test.src', defaultTestSrc);
-      if (filepath.match('test/')) {
-        grunt.config('mochaTest.test.src', filepath);
-      }
+        grunt.config('mochaTest.test.src', defaultTestSrc);
+        if (filepath.match('test/')) {
+            grunt.config('mochaTest.test.src', filepath);
+        }
     });
 
     // Aliases
