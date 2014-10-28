@@ -25,6 +25,18 @@ function assertNotEqualsExpectedFile(result, expectFile) {
     assertExpectedFile(result, expectFile, assert.notStrictEqual);
 }
 
+function writeAndAssertEqualsExpectedFile(spec, expectFile) {
+    var result, resultErr;
+
+    specWriter(spec, function(out, err) {
+        result = out;
+        resultErr = err;
+    });
+
+    assert.strictEqual(resultErr, null, 'result error should be null');
+    assertEqualsExpectedFile(result, expectFile);
+}
+
 function specWithMinimumTags() {
     var spec = new rpmspec();
     spec.tags.name = 'easyrpm';
@@ -44,13 +56,7 @@ describe('spec writer', function() {
 
     describe('given the minimum tags', function() {
         it('should produce the correct spec', function() {
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_01');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_01');
         });
     });
 
@@ -77,14 +83,7 @@ describe('spec writer', function() {
             spec.addExclusiveOS('bsd', 'solaris');
             spec.tags.prefix = '/opt/easyrpm';
             spec.tags.buildRoot = '/tmp/easyrpm';
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_05');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_05');
         });
     });
 
@@ -93,15 +92,7 @@ describe('spec writer', function() {
             it('should not produce any Auto* tags', function() {
                 spec.tags.autoProv = true;
                 spec.tags.autoReq = true;
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_01');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_01');
             });
         });
 
@@ -109,15 +100,7 @@ describe('spec writer', function() {
             it('should only produce the AutoReq tag', function() {
                 spec.tags.autoProv = true;
                 spec.tags.autoReq = false;
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_06');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_06');
             });
         });
 
@@ -125,15 +108,7 @@ describe('spec writer', function() {
             it('should only produce the AutoProv tag', function() {
                 spec.tags.autoProv = false;
                 spec.tags.autoReq = true;
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_07');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_07');
             });
         });
 
@@ -141,15 +116,7 @@ describe('spec writer', function() {
             it('should only produce the AutoReqProv tag', function() {
                 spec.tags.autoProv = false;
                 spec.tags.autoReq = false;
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_04');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_04');
             });
         });
     });
@@ -160,15 +127,7 @@ describe('spec writer', function() {
                 spec.tags.description = 'Description line one.\n' +
                     'Description line two.\n\n' +
                     'Description line four.';
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_02');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_02');
             });
         });
 
@@ -180,15 +139,7 @@ describe('spec writer', function() {
                     spec.tags.description = 'Description line one.\n' +
                         'Description line two.\n\n' +
                         'Description line four.';
-
-                    specWriter(spec, function(out, err) {
-                        result = out;
-                        resultErr = err;
-                    });
-
-                    assert.strictEqual(resultErr, null,
-                        'result error should be null');
-                    assertEqualsExpectedFile(result, 'expect_03');
+                    writeAndAssertEqualsExpectedFile(spec, 'expect_03');
                 });
         });
     });
@@ -197,15 +148,7 @@ describe('spec writer', function() {
         describe('with a single source defined', function() {
             it('should use an un-numbered source tag', function() {
                 spec.addSources('ftp://x.example.com/pkg.tar.gz');
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_08');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_08');
             });
         });
 
@@ -213,15 +156,7 @@ describe('spec writer', function() {
             it('should use numbered source tags', function() {
                 spec.addSources('source_A.tar.gz', 'source_B.tar.gz',
                     'source_C.tar.gz');
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_09');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_09');
             });
         });
     });
@@ -231,14 +166,7 @@ describe('spec writer', function() {
             spec.addSources('source_A.tar.gz', 'source_B.tar.gz',
                 'source_C.tar.gz');
             spec.addNoSources(0, 2);
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_10');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_10');
         });
     });
 
@@ -246,15 +174,7 @@ describe('spec writer', function() {
         describe('with a single patch defined', function() {
             it('should use an un-numbered patch tag', function() {
                 spec.addPatches('update-1.0.patch');
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_11');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_11');
             });
         });
 
@@ -262,15 +182,7 @@ describe('spec writer', function() {
             it('should use numbered patch tags', function() {
                 spec.addPatches('update-1.0.patch', 'update-1.1.patch',
                     'update-1.4.patch');
-
-                specWriter(spec, function(out, err) {
-                    result = out;
-                    resultErr = err;
-                });
-
-                assert.strictEqual(resultErr, null,
-                    'result error should be null');
-                assertEqualsExpectedFile(result, 'expect_12');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_12');
             });
         });
     });
@@ -280,84 +192,42 @@ describe('spec writer', function() {
             spec.addPatches('update-1.0.patch', 'update-1.1.patch',
                 'update-1.4.patch');
             spec.addNoPatches(0, 2);
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_13');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_13');
         });
     });
 
     describe('prep scripts', function() {
         it('should produce the %prep section when non-empty', function() {
             spec.addPrepScripts('ls -la', 'mkdir preppin');
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_14');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_14');
         });
     });
 
     describe('build scripts', function() {
         it('should produce the %build section when non-empty', function() {
             spec.addBuildScripts('make', 'grep foo');
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_15');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_15');
         });
     });
 
     describe('install scripts', function() {
         it('should produce the %build section when non-empty', function() {
             spec.addInstallScripts('make install', 'banner woo');
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_16');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_16');
         });
     });
 
     describe('check scripts', function() {
         it('should produce the %check section when non-empty', function() {
             spec.addCheckScripts('make check', 'make test');
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_17');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_17');
         });
     });
 
     describe('clean scripts', function() {
         it('should produce the %clean section when non-empty', function() {
             spec.addCleanScripts('make clean', 'rm -rf /');
-
-            specWriter(spec, function(out, err) {
-                result = out;
-                resultErr = err;
-            });
-
-            assert.strictEqual(resultErr, null, 'result error should be null');
-            assertEqualsExpectedFile(result, 'expect_18');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_18');
         });
     });
 });
