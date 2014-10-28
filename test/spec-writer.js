@@ -290,4 +290,74 @@ describe('spec writer', function() {
             assertEqualsExpectedFile(result, 'expect_13');
         });
     });
+
+    describe('prep scripts', function() {
+        it('should produce the %prep section when non-empty', function() {
+            spec.addPrepScripts('ls -la', 'mkdir preppin');
+
+            specWriter(spec, function(out, err) {
+                result = out;
+                resultErr = err;
+            });
+
+            assert.strictEqual(resultErr, null, 'result error should be null');
+            assertEqualsExpectedFile(result, 'expect_14');
+        });
+    });
+
+    describe('build scripts', function() {
+        it('should produce the %build section when non-empty', function() {
+            spec.addBuildScripts('make', 'grep foo');
+
+            specWriter(spec, function(out, err) {
+                result = out;
+                resultErr = err;
+            });
+
+            assert.strictEqual(resultErr, null, 'result error should be null');
+            assertEqualsExpectedFile(result, 'expect_15');
+        });
+    });
+
+    describe('install scripts', function() {
+        it('should produce the %build section when non-empty', function() {
+            spec.addInstallScripts('make install', 'banner woo');
+
+            specWriter(spec, function(out, err) {
+                result = out;
+                resultErr = err;
+            });
+
+            assert.strictEqual(resultErr, null, 'result error should be null');
+            assertEqualsExpectedFile(result, 'expect_16');
+        });
+    });
+
+    describe('check scripts', function() {
+        it('should produce the %check section when non-empty', function() {
+            spec.addCheckScripts('make check', 'make test');
+
+            specWriter(spec, function(out, err) {
+                result = out;
+                resultErr = err;
+            });
+
+            assert.strictEqual(resultErr, null, 'result error should be null');
+            assertEqualsExpectedFile(result, 'expect_17');
+        });
+    });
+
+    describe('clean scripts', function() {
+        it('should produce the %clean section when non-empty', function() {
+            spec.addCleanScripts('make clean', 'rm -rf /');
+
+            specWriter(spec, function(out, err) {
+                result = out;
+                resultErr = err;
+            });
+
+            assert.strictEqual(resultErr, null, 'result error should be null');
+            assertEqualsExpectedFile(result, 'expect_18');
+        });
+    });
 });

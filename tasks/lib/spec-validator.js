@@ -134,9 +134,13 @@ function validatePrefix(value, result) {
     }
 }
 
-function validateBuildRoot(value, result) {
+function validateBuildRoot(value, cleanScripts, result) {
     if (validator.contains(value, '\n')) {
         result.errors.push('BuildRoot tag cannot contain linebreaks.');
+    } else if (validator.isLength(value, 1) && cleanScripts.length === 0) {
+        result.warnings.push('A BuildRoot is specified without any %clean ' +
+            'scripts.  It may be neccessary to do manual cleaning when ' +
+            'specifying a BuildRoot.');
     }
 }
 
@@ -210,7 +214,7 @@ module.exports = function(spec) {
     validateArchs(spec.tags.excludeArchs, spec.tags.exclusiveArchs, result);
     validateOS(spec.tags.excludeOS, spec.tags.exclusiveOS, result);
     validatePrefix(spec.tags.prefix, result);
-    validateBuildRoot(spec.tags.buildRoot, result);
+    validateBuildRoot(spec.tags.buildRoot, spec.scripts.clean, result);
     validateSources(spec.tags.sources, result);
     validateNoSource(spec.tags.sources, spec.tags.noSources, result);
     validateNoPatch(spec.tags.patches, spec.tags.noPatches, result);

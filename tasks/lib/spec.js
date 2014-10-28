@@ -157,64 +157,115 @@ var Spec = function() {
         // "something" is one or more patches.
         noPatches: []
     };
+
+    this.scripts = {
+        // The %prep script is the first script RPM executes during a build.
+        // Prior to the %prep script, RPM has performed preliminary consistency
+        // checks, such as whether the spec file's source tag points to files
+        // that actually exist. Just prior to passing control over to the %prep
+        // script's contents, RPM changes directory into RPM's build area.
+        // At that point, it is the responsibility of the %prep script to:
+        //  * Create the top-level build directory.
+        //  * Unpack the original sources into the build directory.
+        //  * Apply patches to the sources, if necessary.
+        //  * Perform any other actions required to get the sources in a
+        //    ready-to-build state.
+        // It is useful to be aware of the %setup and %patch macros that can be
+        // used within %prep.  See:
+        // http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-macros.html
+        prep: [],
+
+        // The %build script picks up where the %prep script left off. Once the
+        // %prep script has gotten everything ready for the build, the %build
+        // script is usually somewhat anti-climactic — normally invoking make,
+        // maybe a configuration script, and little else.
+        build: [],
+
+        // The environment in which the %install script executes is identical
+        // to the other scripts. Like the other scripts, the %install script's
+        // working directory is set to the software's top-level directory.
+        install: [],
+
+        // The environment in which the %check script executes is identical to
+        // the other scripts. Like the other scripts, the %check script's
+        // working directory is set to the software's top-level directory.
+        // This script's primary function is to run the test suite of the built
+        // software to ensure that the binaries work correctly. Some typical
+        // commands to run in this script are make test or make check.
+        check: [],
+
+        // The %clean script, as the name implies, is used to clean up the
+        // software's build directory tree. RPM normally does this for you, but
+        // in certain cases (most notably in those packages that use a build
+        // root) you'll need to include a %clean script.
+        clean: []
+    };
 };
 
-/**
- * Adds the contents of args, which should be an Arguments object, to the
- * tag specified by tagName.  If the tagName property does not exist on the
- * spec.tags object, or it is not an array, an error is thrown.
- */
-Spec.prototype._bulkAddToTag = function(tagName, args) {
-    if (this.tags.hasOwnProperty(tagName) &&
-        this.tags[tagName].constructor === Array) {
-        var tagArray = this.tags[tagName],
-            i;
-        for (i = 0; i < args.length; i++) {
-            tagArray.push(args[i]);
-        }
-    } else {
-        throw new Error('Tag property must exist and must be an array.');
+Spec.prototype._bulkArgAdd = function(arr, args) {
+    for (var i = 0; i < args.length; i++) {
+        arr.push(args[i]);
     }
 };
 
 Spec.prototype.addRequirements = function() {
-    this._bulkAddToTag('requires', arguments);
+    this._bulkArgAdd(this.tags.requires, arguments);
 };
 
 Spec.prototype.addConflicts = function() {
-    this._bulkAddToTag('conflicts', arguments);
+    this._bulkArgAdd(this.tags.conflicts, arguments);
 };
 
 Spec.prototype.addExcludeArchs = function() {
-    this._bulkAddToTag('excludeArchs', arguments);
+    this._bulkArgAdd(this.tags.excludeArchs, arguments);
 };
 
 Spec.prototype.addExclusiveArchs = function() {
-    this._bulkAddToTag('exclusiveArchs', arguments);
+    this._bulkArgAdd(this.tags.exclusiveArchs, arguments);
 };
 
 Spec.prototype.addExcludeOS = function() {
-    this._bulkAddToTag('excludeOS', arguments);
+    this._bulkArgAdd(this.tags.excludeOS, arguments);
 };
 
 Spec.prototype.addExclusiveOS = function() {
-    this._bulkAddToTag('exclusiveOS', arguments);
+    this._bulkArgAdd(this.tags.exclusiveOS, arguments);
 };
 
 Spec.prototype.addSources = function() {
-    this._bulkAddToTag('sources', arguments);
+    this._bulkArgAdd(this.tags.sources, arguments);
 };
 
 Spec.prototype.addNoSources = function() {
-    this._bulkAddToTag('noSources', arguments);
+    this._bulkArgAdd(this.tags.noSources, arguments);
 };
 
 Spec.prototype.addPatches = function() {
-    this._bulkAddToTag('patches', arguments);
+    this._bulkArgAdd(this.tags.patches, arguments);
 };
 
 Spec.prototype.addNoPatches = function() {
-    this._bulkAddToTag('noPatches', arguments);
+    this._bulkArgAdd(this.tags.noPatches, arguments);
+};
+
+Spec.prototype.addPrepScripts = function() {
+    this._bulkArgAdd(this.scripts.prep, arguments);
+};
+
+Spec.prototype.addBuildScripts = function() {
+    this._bulkArgAdd(this.scripts.build, arguments);
+};
+
+Spec.prototype.addInstallScripts = function() {
+    this._bulkArgAdd(this.scripts.install, arguments);
+};
+
+Spec.prototype.addCheckScripts = function() {
+    this._bulkArgAdd(this.scripts.check, arguments);
+};
+
+Spec.prototype.addCleanScripts = function() {
+    this._bulkArgAdd(this.scripts.clean, arguments);
 };
 
 module.exports = Spec;

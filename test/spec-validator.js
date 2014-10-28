@@ -247,6 +247,14 @@ describe('validating spec property', function() {
             result = specValidator(spec);
             assertResult(result, false, 0, 1);
         });
+
+        describe('supplied without any clean scripts', function() {
+            it('should produce a warning', function() {
+                spec.tags.buildRoot = '/tmp/easyrpm';
+                result = specValidator(spec);
+                assertResult(result, true, 1, 0);
+            });
+        });
     });
 
     describe('source tags', function() {

@@ -47,6 +47,19 @@ function bufferTagIfExists(buffer, spec, tag, label) {
     }
 }
 
+function bufferScriptBlock(buffer, arr, keyword, hideIfEmpty) {
+    var i;
+
+    if (hideIfEmpty && arr.length === 0) {
+        return;
+    }
+
+    buffer.add(keyword);
+    for (i = 0; i < arr.length; i++) {
+        buffer.add(arr[i]);
+    }
+}
+
 module.exports = function(spec, callback) {
     var buffer = new LineBuffer(),
         i;
@@ -137,7 +150,17 @@ module.exports = function(spec, callback) {
             .add(spec.tags.description);
     }
 
+    // Script sections.
     buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.prep, '%prep', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.build, '%build', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.install, '%install', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.check, '%check', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.clean, '%clean', true);
 
     callback(buffer.string(), null);
 };
