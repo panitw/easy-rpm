@@ -4,6 +4,9 @@ packages.
 
 [![NPM](https://nodei.co/npm/grunt-easy-rpm.png?compact=true)](https://nodei.co/npm/grunt-easy-rpm/)
 
+If you are interested in participating in the project, consult the Contributing
+section below.
+
 ## Prerequisites
 This plugin requires Grunt `~0.4.5` and, at minimum, the `rpmdevtools`.
 The RPM tools can be installed on most unix-like systems, including Mac OSX.
@@ -371,3 +374,26 @@ Default value: `true`
 Toggles quoting the target file paths in the RPM spec.  It is generally best
 to keep this setting to true.
 
+## Contributing
+For those interested in contributing to the project, there are a few simple
+guidelines to follow.
+
+If you've found a bug or feel the project could use a new feature:
+  1.  Submit an [issue on github](https://github.com/panitw/easy-rpm/issues)
+  2.  Participate in the discussion on it
+
+If you want to contribute code to the project:
+  1. Ensure there is an issue filed for the bug or feature (see above)
+  2. Fork the project and branch off the `develop` branch
+  3. On your bug/feature branch, write the code that addresses the issue (see
+     below for style guidelines and process)
+  4. Periodically pull from the `develop` branch on this repository
+  5. When you feel it is complete, submit a pull request targeting the
+     `develop` branch on this repository
+  6. Participate in the code review
+
+Code style and process:
+  * To keep the style uniform, use [EditorConfig](http://editorconfig.org/) and
+    the grunt task `jsbeautifier`
+  * Write clear, concise comments and commit messages
+  * Squash commits that iterate work on a similar set of changes
