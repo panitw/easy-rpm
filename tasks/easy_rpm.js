@@ -21,9 +21,11 @@ function preserveCopy(grunt, srcpath, destpath, options) {
     }
 }
 
-function processFile(grunt,obj) {
+function processFile(grunt, obj) {
     var template = "<%= (dir == true) ? '%dir ' : '' %>%attr(<%= mode || '-' %>,<%= owner || '-' %>,<%= group || '-' %>)<%= config == true ? '%config' : ''%><%= ( doc == true) ? ' %doc' : '' %> <%= file %>";
-    return grunt.template.process(template, { data: obj });
+    return grunt.template.process(template, {
+        data: obj
+    });
 }
 
 function writeSpecFile(grunt, files, options) {
@@ -48,10 +50,10 @@ function writeSpecFile(grunt, files, options) {
     // Add prefix tag for relocatable packages:
     // http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html
     if (options.hasOwnProperty('prefix')) {
-      if (grunt.util.kindOf(options.prefix) === "string" &&
-          options.prefix.length > 0) {
-          b.push("Prefix: " + options.prefix);
-      }
+        if (grunt.util.kindOf(options.prefix) === "string" &&
+            options.prefix.length > 0) {
+            b.push("Prefix: " + options.prefix);
+        }
     }
 
     if (typeof options.autoReqProv !== "undefined") {
@@ -68,22 +70,22 @@ function writeSpecFile(grunt, files, options) {
 
     b.push("");
     b.push("%changelog");
-    
+
     if (typeof options.changelog === "object") {
-	if (options.changelog.length > 0) {
-	    for (i = 0; i < options.changelog.length; i++) {
-		b.push(options.changelog[i]);
-	    }
-	}
+        if (options.changelog.length > 0) {
+            for (i = 0; i < options.changelog.length; i++) {
+                b.push(options.changelog[i]);
+            }
+        }
     } else if (typeof options.changelog === "function") {
-	var changelog_lines = options.changelog();
-	if (changelog_lines.length > 0) {
-	    for ( i = 0; i < changelog_lines.length; i++) {
-		b.push(changelog_lines[i]);
-	    }
-	}
+        var changelog_lines = options.changelog();
+        if (changelog_lines.length > 0) {
+            for (i = 0; i < changelog_lines.length; i++) {
+                b.push(changelog_lines[i]);
+            }
+        }
     }
-    
+
     b.push("");
     b.push("%files");
     for (i = 0; i < files.length; i++) {
@@ -217,15 +219,15 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln("Copying: " + actualSrcPath);
                     preserveCopy(grunt, actualSrcPath, copyTargetPath);
 
-		    fileBasket.push(processFile(grunt,{ 
-			config: file.config || false,
-			doc: file.doc || false,
-			mode: file.mode || false,
-			owner: file.owner || "root",
-			group: file.group || "root",
-			dir: false,
-			file: actualTargetPath
-		    }));
+                    fileBasket.push(processFile(grunt, {
+                        config: file.config || false,
+                        doc: file.doc || false,
+                        mode: file.mode || false,
+                        owner: file.owner || "root",
+                        group: file.group || "root",
+                        dir: false,
+                        file: actualTargetPath
+                    }));
                 } else {
                     // save to filebasket for later use
                     grunt.verbose.writeln("Creating directory: " + actualSrcPath);
