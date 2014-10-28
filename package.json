@@ -1,7 +1,7 @@
 {
   "name": "grunt-easy-rpm",
   "description": "Easily create RPM packages.",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "homepage": "https://github.com/panitw/easy-rpm",
   "author": {
     "name": "Panit Wechasil"
@@ -49,6 +49,7 @@
   },
   "keywords": [
     "grunt",
+    "gruntplugin",
     "rpm",
     "packager",
     "package",
