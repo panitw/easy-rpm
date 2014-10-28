@@ -198,7 +198,36 @@ var Spec = function() {
         // software's build directory tree. RPM normally does this for you, but
         // in certain cases (most notably in those packages that use a build
         // root) you'll need to include a %clean script.
-        clean: []
+        clean: [],
+
+        // The %pre script executes just before the package is to be installed.
+        preInstall: [],
+
+        // The %post script executes after the package has been installed.
+        // If a package uses a %post script to perform some function, quite
+        // often it will include a %postun script that performs the inverse of
+        // the %post script, after the package has been removed.
+        postInstall: [],
+
+        // If there's a time when your package needs to have one last look
+        // around before the user erases it, the place to do it is in the
+        // %preun script. Anything that a package needs to do immediately prior
+        // to RPM taking any action to erase the package, can be done here.
+        preUninstall: [],
+
+        // The %postun script executes after the package has been removed. It
+        // is the last chance for a package to clean up after itself.
+        postUninstall: [],
+
+        // The %verifyscript executes whenever the installed package is
+        // verified by RPM's verification command. The contents of this script
+        // is entirely up to the package builder, but in general the script
+        // should do whatever is necessary to verify the package's proper
+        // installation. Since RPM automatically verifies the existence of a
+        // package's files, along with other file attributes, the %verifyscript
+        // should concentrate on different aspects of the package's
+        // installation.
+        verify: []
     };
 };
 
@@ -266,6 +295,26 @@ Spec.prototype.addCheckScripts = function() {
 
 Spec.prototype.addCleanScripts = function() {
     this._bulkArgAdd(this.scripts.clean, arguments);
+};
+
+Spec.prototype.addPreInstallScripts = function() {
+    this._bulkArgAdd(this.scripts.preInstall, arguments);
+};
+
+Spec.prototype.addPostInstallScripts = function() {
+    this._bulkArgAdd(this.scripts.postInstall, arguments);
+};
+
+Spec.prototype.addPreUninstallScripts = function() {
+    this._bulkArgAdd(this.scripts.preUninstall, arguments);
+};
+
+Spec.prototype.addPostUninstallScripts = function() {
+    this._bulkArgAdd(this.scripts.postUninstall, arguments);
+};
+
+Spec.prototype.addVerifyScripts = function() {
+    this._bulkArgAdd(this.scripts.verify, arguments);
 };
 
 module.exports = Spec;

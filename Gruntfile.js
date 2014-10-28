@@ -68,7 +68,10 @@ module.exports = function(grunt) {
                 options: {
                     spawn: false
                 },
-                files: '**/*.js',
+                files: [
+                    '**/*.js',
+                    'test/**/*.spec'
+                ],
                 tasks: ['mochaTest']
             }
         }
@@ -87,7 +90,7 @@ module.exports = function(grunt) {
     var defaultTestSrc = grunt.config('mochaTest.test.src');
     grunt.event.on('watch', function(action, filepath) {
         grunt.config('mochaTest.test.src', defaultTestSrc);
-        if (filepath.match('test/')) {
+        if (filepath.match('test/*.js')) {
             grunt.config('mochaTest.test.src', filepath);
         }
     });

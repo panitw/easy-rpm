@@ -230,4 +230,56 @@ describe('spec writer', function() {
             writeAndAssertEqualsExpectedFile(spec, 'expect_18');
         });
     });
+
+    describe('preinstall scripts', function() {
+        it('should produce the %pre section when non-empty', function() {
+            spec.addPreInstallScripts('find xyz', 'banner pre');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_19');
+        });
+    });
+
+    describe('postinstall scripts', function() {
+        it('should produce the %post section when non-empty', function() {
+            spec.addPostInstallScripts('find abc', 'banner post');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_20');
+        });
+    });
+
+    describe('preuninstall scripts', function() {
+        it('should produce the %preun section when non-empty', function() {
+            spec.addPreUninstallScripts('find 123', 'banner preun');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_21');
+        });
+    });
+
+    describe('postuninstall scripts', function() {
+        it('should produce the %postun section when non-empty', function() {
+            spec.addPostUninstallScripts('find qrt', 'banner postun');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_22');
+        });
+    });
+
+    describe('verify scripts', function() {
+        it('should produce the %verifyscript section when non-empty',
+            function() {
+                spec.addVerifyScripts('grep foo', 'echo "bar" >&2');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_23');
+            });
+    });
+
+    describe('all scripts', function() {
+        it('should produce the sections in order and as expected', function() {
+            spec.addPrepScripts('echo "prep"');
+            spec.addBuildScripts('echo "build"');
+            spec.addInstallScripts('echo "install"');
+            spec.addCheckScripts('echo "check"');
+            spec.addCleanScripts('echo "clean"');
+            spec.addPreInstallScripts('echo "pre"');
+            spec.addPostInstallScripts('echo "post"');
+            spec.addPreUninstallScripts('echo "preun"');
+            spec.addPostUninstallScripts('echo "postun"');
+            spec.addVerifyScripts('echo "verifyscript"');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_24');
+        });
+    });
 });

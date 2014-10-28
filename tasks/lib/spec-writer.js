@@ -64,6 +64,7 @@ module.exports = function(spec, callback) {
     var buffer = new LineBuffer(),
         i;
 
+    // Tags.
     buffer
         .add('Name: ' + spec.tags.name)
         .add('Version: ' + spec.tags.version)
@@ -161,6 +162,16 @@ module.exports = function(spec, callback) {
     bufferScriptBlock(buffer, spec.scripts.check, '%check', true);
     buffer.ensureEmptyLine();
     bufferScriptBlock(buffer, spec.scripts.clean, '%clean', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.preInstall, '%pre', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.postInstall, '%post', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.preUninstall, '%preun', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.postUninstall, '%postun', true);
+    buffer.ensureEmptyLine();
+    bufferScriptBlock(buffer, spec.scripts.verify, '%verifyscript', true);
 
     callback(buffer.string(), null);
 };
