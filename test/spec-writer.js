@@ -282,4 +282,157 @@ describe('spec writer', function() {
             writeAndAssertEqualsExpectedFile(spec, 'expect_24');
         });
     });
+
+    describe('files', function() {
+        it('should produce the %files section when non-empty', function() {
+            spec.addFiles({
+                path: '/opt/easyrpm/README'
+            });
+            writeAndAssertEqualsExpectedFile(spec, 'expect_25');
+        });
+
+        describe('when marked as documentation', function() {
+            it('should produce the %doc directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/README',
+                    doc: true
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/INSTALL',
+                    doc: true
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_26');
+            });
+        });
+
+        describe('when marked as a configuration file', function() {
+            it('should produce the %config directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/package.json',
+                    config: true
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/more.conf',
+                    config: true
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_27');
+            });
+        });
+
+        describe('when marked as a ghost', function() {
+            it('should produce the %ghost directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/package.json',
+                    ghost: true
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/more.conf',
+                    ghost: true
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_28');
+            });
+        });
+
+        describe('when marked as a directory', function() {
+            it('should produce the %dir directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/',
+                    dir: true
+                }, {
+                    path: '/opt/easyrpm2/foo.c'
+                }, {
+                    path: '/opt/easyrpm2/stuff',
+                    dir: true
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_33');
+            });
+        });
+
+        describe('when only a mode is specified', function() {
+            it('should produce an appropriate %attr directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/package.json',
+                    mode: 755
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/more.conf',
+                    mode: 644
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_29');
+            });
+        });
+
+        describe('when only a user is specified', function() {
+            it('should produce an appropriate %attr directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/package.json',
+                    user: 'foobar'
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/more.conf',
+                    user: 'bazquux'
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_30');
+            });
+        });
+
+        describe('when only a group is specified', function() {
+            it('should produce an appropriate %attr directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/package.json',
+                    group: 'baseballfury'
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/more.conf',
+                    group: 'theorphans'
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_31');
+            });
+        });
+
+        describe('when attribute combinations are specified', function() {
+            it('should produce an appropriate %attr directive', function() {
+                spec.addFiles({
+                    path: '/fileA',
+                    mode: 666,
+                    group: 'baseballfury'
+                }, {
+                    path: '/fileB',
+                    mode: 662,
+                    user: 'bazbaz'
+                }, {
+                    path: '/fileC',
+                    user: 'jimmy',
+                    group: 'theorphans'
+                }, {
+                    path: '/fileD',
+                    mode: 777,
+                    user: 'u',
+                    group: 'g'
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_32');
+            });
+        });
+
+        describe('when default attributes are specified', function() {
+            it('should produce the %defattr directive', function() {
+                spec.addFiles({
+                    path: '/fileA'
+                });
+                spec.setDefaultAttributes({
+                    mode: 644,
+                    user: 'user',
+                    group: 'group',
+                    dirMode: 755
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_34');
+            });
+        });
+    });
 });

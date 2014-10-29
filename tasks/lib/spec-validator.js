@@ -192,6 +192,120 @@ function validateNoPatch(patches, nopatches, result) {
     });
 }
 
+function validateMode(mode, errors, warnings) {
+    var modeMatch;
+
+    if (!validator.isInt(mode)) {
+        errors.nonIntegerMode = true;
+    } else {
+        modeMatch = validator.toString(mode).match(/^[0-7]{3}$/);
+        // In node REPL modeMatch would be undefined but null when run
+        // otherwise.
+        if (modeMatch === null || modeMatch === undefined) {
+            warnings.nonStandardMode = true;
+        }
+    }
+}
+
+function validateFiles(files, result) {
+    var errors = {
+            emptyPath: false,
+            newlinePath: false,
+            nonIntegerMode: false,
+            numericUser: false,
+            numericGroup: false
+        },
+        warnings = {
+            nonStandardMode: false
+        },
+        i, file;
+
+    for (i = 0; i < files.length; i++) {
+        file = files[i];
+
+        // Check path.
+        if (!validator.isLength(file.path, 1)) {
+            errors.emptyPath = true;
+        } else if (validator.contains(file.path, '\n')) {
+            errors.newlinePath = true;
+        }
+
+        // Check mode.
+        if (validator.isLength(file.mode, 1)) {
+            validateMode(file.mode, errors, warnings);
+        }
+
+        if (validator.isLength(file.user, 1) && validator.isInt(file.user)) {
+            errors.numericUser = true;
+        }
+
+        if (validator.isLength(file.group, 1) && validator.isInt(file.group)) {
+            errors.numericGroup = true;
+        }
+    }
+
+    if (errors.emptyPath) {
+        result.errors.push('One or more files contain an empty path.');
+    }
+    if (errors.newlinePath) {
+        result.errors.push('One or more files contain a new line in the path.');
+    }
+    if (errors.nonIntegerMode) {
+        result.errors.push('One or more file modes are non-integral.');
+    }
+    if (errors.numericUser) {
+        result.errors.push('One or more files specify a numeric user id.');
+    }
+    if (errors.numericGroup) {
+        result.errors.push('One or more files specify a numeric group id.');
+    }
+    if (warnings.nonStandardMode) {
+        result.warnings.push('One or more file modes appear incorrect.');
+    }
+}
+
+function validateDefaultAttributes(attrs, result) {
+    var errors = {
+            nonIntegerMode: false
+        },
+        warnings = {
+            nonStandardMode: false
+        };
+
+    if (attrs === null) {
+        return;
+    }
+
+    if (validator.isLength(attrs.mode, 1)) {
+        validateMode(attrs.mode, errors, warnings);
+        if (errors.nonIntegerMode) {
+            result.errors.push('Default file mode must be integral.');
+        }
+        if (warnings.nonStandardMode) {
+            result.warnings.push('Default file mode appears incorrect.');
+        }
+        errors.nonIntegerMode = warnings.nonStandardMode = false;
+    }
+
+    if (validator.isLength(attrs.dirMode, 1)) {
+        validateMode(attrs.dirMode, errors, warnings);
+        if (errors.nonIntegerMode) {
+            result.errors.push('Default directory mode must be integral.');
+        }
+        if (warnings.nonStandardMode) {
+            result.warnings.push('Default directory mode appears incorrect.');
+        }
+    }
+
+    if (validator.isLength(attrs.user, 1) && validator.isInt(attrs.user)) {
+        result.errors.push('Default user must not be numeric.');
+    }
+
+    if (validator.isLength(attrs.group, 1) && validator.isInt(attrs.group)) {
+        result.errors.push('Default group must not be numeric.');
+    }
+}
+
 module.exports = function(spec) {
     var result = {
         warnings: [],
@@ -218,9 +332,11 @@ module.exports = function(spec) {
     validateSources(spec.tags.sources, result);
     validateNoSource(spec.tags.sources, spec.tags.noSources, result);
     validateNoPatch(spec.tags.patches, spec.tags.noPatches, result);
+    validateFiles(spec.files.list, result);
+    validateDefaultAttributes(spec.files.defaultAttributes, result);
 
     // Set the valid property on the result for simple checking.
-    result.valid = result.errors.length === 0;
+    result.valid = (result.errors.length === 0);
 
     return result;
 };

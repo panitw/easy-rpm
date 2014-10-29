@@ -60,6 +60,61 @@ function bufferScriptBlock(buffer, arr, keyword, hideIfEmpty) {
     }
 }
 
+function bufferFiles(buffer, files) {
+    var directives, defAttrs, attrs, file, i;
+
+    buffer.ensureEmptyLine();
+
+    if (files.list.length > 0) {
+        buffer.add('%files');
+
+        // Add the default attributes directive if present.
+        if (files.defaultAttributes !== null) {
+            defAttrs = '%defattr(';
+            defAttrs += (files.defaultAttributes.mode || '-') + ', ';
+            defAttrs += (files.defaultAttributes.user || '-') + ', ';
+            defAttrs += (files.defaultAttributes.group || '-') + ', ';
+            defAttrs += (files.defaultAttributes.dirMode || '-') + ')';
+            buffer.add(defAttrs);
+        }
+
+        for (i = 0; i < files.list.length; i++) {
+            directives = [];
+            file = files.list[i];
+
+            if (file.doc === true) {
+                directives.push('%doc');
+            }
+
+            if (file.config === true) {
+                directives.push('%config');
+            }
+
+            if (file.ghost === true) {
+                directives.push('%ghost');
+            }
+
+            if (file.dir === true) {
+                directives.push('%dir');
+            }
+
+            if (file.hasOwnProperty('mode') ||
+                file.hasOwnProperty('user') ||
+                file.hasOwnProperty('group')) {
+                attrs = '%attr(';
+                attrs += (file.mode || '-') + ', ';
+                attrs += (file.user || '-') + ', ';
+                attrs += (file.group || '-') + ')';
+                directives.push(attrs);
+            }
+
+            directives.push(file.path);
+
+            buffer.add(directives.join(' '));
+        }
+    }
+}
+
 module.exports = function(spec, callback) {
     var buffer = new LineBuffer(),
         i;
@@ -172,6 +227,9 @@ module.exports = function(spec, callback) {
     bufferScriptBlock(buffer, spec.scripts.postUninstall, '%postun', true);
     buffer.ensureEmptyLine();
     bufferScriptBlock(buffer, spec.scripts.verify, '%verifyscript', true);
+
+    // Files section.
+    bufferFiles(buffer, spec.files);
 
     callback(buffer.string(), null);
 };

@@ -229,6 +229,11 @@ var Spec = function() {
         // installation.
         verify: []
     };
+
+    this.files = {
+        defaultAttributes: null,
+        list: []
+    };
 };
 
 Spec.prototype._bulkArgAdd = function(arr, args) {
@@ -315,6 +320,19 @@ Spec.prototype.addPostUninstallScripts = function() {
 
 Spec.prototype.addVerifyScripts = function() {
     this._bulkArgAdd(this.scripts.verify, arguments);
+};
+
+Spec.prototype.addFiles = function() {
+    this._bulkArgAdd(this.files.list, arguments);
+};
+
+Spec.prototype.setDefaultAttributes = function(attrs) {
+    this.files.defaultAttributes = {
+        mode: attrs.mode || null,
+        user: attrs.user || null,
+        group: attrs.group || null,
+        dirMode: attrs.dirMode || null
+    };
 };
 
 module.exports = Spec;
