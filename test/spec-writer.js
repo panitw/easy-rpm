@@ -61,6 +61,13 @@ describe('spec writer', function() {
         });
     });
 
+    describe('given define directives', function() {
+        it('should produce the appropriate statements', function() {
+            spec.addDefines('_topdir /abc', '_rpmdir /xyz');
+            writeAndAssertEqualsExpectedFile(spec, 'expect_35');
+        });
+    });
+
     // Note that this test basically ensures that tags with no specific output
     // needs are written as expected.
     describe('given all (most) tags', function() {

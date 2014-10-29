@@ -119,6 +119,14 @@ module.exports = function(spec, callback) {
     var buffer = new LineBuffer(),
         i;
 
+    // Defines.
+    if (spec.tags.defines.length > 0) {
+        for (i = 0; i < spec.tags.defines.length; i++) {
+            buffer.add('%define ' + spec.tags.defines[i]);
+        }
+        buffer.ensureEmptyLine();
+    }
+
     // Tags.
     buffer
         .add('Name: ' + spec.tags.name)

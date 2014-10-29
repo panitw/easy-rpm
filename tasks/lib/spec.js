@@ -1,5 +1,9 @@
 var Spec = function() {
     this.tags = {
+        // Stores arbitrary define statements that appear at the top of the
+        // spec file.  Each entry will be prepended with the %define directive.
+        defines: [],
+
         // The name tag is used to define the name of the software being
         // packaged. In most (if not all) cases, the name used for a package
         // should be identical in spelling and case to the software being
@@ -245,6 +249,10 @@ Spec.prototype._bulkArgAdd = function(arr, args) {
     for (var i = 0; i < args.length; i++) {
         arr.push(args[i]);
     }
+};
+
+Spec.prototype.addDefines = function() {
+    this._bulkArgAdd(this.tags.defines, arguments);
 };
 
 Spec.prototype.addRequirements = function() {
