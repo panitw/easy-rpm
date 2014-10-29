@@ -10,6 +10,7 @@ function validSpec() {
     spec.tags.name = 'ValidName';
     spec.tags.version = '1.2.3';
     spec.tags.release = '1';
+    spec.tags.buildArch = 'noarch';
 
     return spec;
 }
@@ -89,6 +90,18 @@ describe('validating spec', function() {
         it('should produce a warning when non-integral', function() {
             spec.tags.release = 'a';
             validateAndAssertResult(spec, true, 1, 0);
+        });
+    });
+
+    describe('buildArch', function() {
+        it('should produce an error when not set', function() {
+            spec.tags.buildArch = '';
+            validateAndAssertResult(spec, false, 0, 1);
+        });
+
+        it('should produce an error when it contains a newline', function() {
+            spec.tags.buildArch = 'no\narch';
+            validateAndAssertResult(spec, false, 0, 1);
         });
     });
 

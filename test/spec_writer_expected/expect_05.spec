@@ -1,6 +1,7 @@
 Name: easyrpm
 Version: 0.0.1
 Release: 21
+BuildArch: noarch
 Summary: Easily create RPM packages.
 License: MIT
 Epoch: 23

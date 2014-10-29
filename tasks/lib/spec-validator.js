@@ -36,6 +36,14 @@ function validateRelease(value, result) {
     }
 }
 
+function validateBuildArch(value, result) {
+    if (!validator.isLength(value, 1)) {
+        result.errors.push('BuildArch tag cannot be empty.');
+    } else if (validator.contains(value, '\n')) {
+        result.errors.push('BuildArch cannot contain linebreaks.');
+    }
+}
+
 function validateSummary(value, result) {
     if (validator.contains(value, '\n')) {
         result.errors.push('Summary tag cannot contain linebreaks.');
@@ -315,6 +323,7 @@ module.exports = function(spec) {
     validateName(spec.tags.name, result);
     validateVersion(spec.tags.version, result);
     validateRelease(spec.tags.release, result);
+    validateBuildArch(spec.tags.buildArch, result);
     validateSummary(spec.tags.summary, result);
     validateLicense(spec.tags.license, result);
     validateEpoch(spec.tags.epoch, result);

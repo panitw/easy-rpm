@@ -27,6 +27,11 @@ var Spec = function() {
         // back to "1" when it is first packaged.
         release: null,
 
+        // Specifies the achitecture for the package and is also included in
+        // the final RPM filename.  Use 'noarch' for packages that are
+        // achitecture independent.
+        buildArch: null,
+
         // Can span multiple lines. If a line starts with a space, that line
         // will be displayed verbatim by RPM. Lines that do not start with a
         // space are assumed to be part of a paragraph and will be formatted by

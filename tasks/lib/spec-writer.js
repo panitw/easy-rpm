@@ -98,9 +98,9 @@ function bufferFiles(buffer, files) {
                 directives.push('%dir');
             }
 
-            if (file.hasOwnProperty('mode') ||
-                file.hasOwnProperty('user') ||
-                file.hasOwnProperty('group')) {
+            if ((file.hasOwnProperty('mode') && file.mode !== null) ||
+                (file.hasOwnProperty('user') && file.user !== null) ||
+                (file.hasOwnProperty('group') && file.group !== null)) {
                 attrs = '%attr(';
                 attrs += (file.mode || '-') + ', ';
                 attrs += (file.user || '-') + ', ';
@@ -108,7 +108,7 @@ function bufferFiles(buffer, files) {
                 directives.push(attrs);
             }
 
-            directives.push(file.path);
+            directives.push('"' + file.path + '"');
 
             buffer.add(directives.join(' '));
         }
@@ -123,7 +123,8 @@ module.exports = function(spec, callback) {
     buffer
         .add('Name: ' + spec.tags.name)
         .add('Version: ' + spec.tags.version)
-        .add('Release: ' + spec.tags.release);
+        .add('Release: ' + spec.tags.release)
+        .add('BuildArch: ' + spec.tags.buildArch);
 
     bufferTagIfExists(buffer, spec, 'summary', 'Summary');
     bufferTagIfExists(buffer, spec, 'license', 'License');

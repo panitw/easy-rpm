@@ -42,6 +42,7 @@ function specWithMinimumTags() {
     spec.tags.name = 'easyrpm';
     spec.tags.version = '0.0.1';
     spec.tags.release = 21;
+    spec.tags.buildArch = 'noarch';
     return spec;
 }
 
