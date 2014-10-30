@@ -12,8 +12,6 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-
         jsbeautifier: {
             options: {
                 js: {
@@ -73,6 +71,37 @@ module.exports = function(grunt) {
                     'test/**/*.spec'
                 ],
                 tasks: ['mochaTest']
+            }
+        },
+
+        // An example use of the plugin.
+        easy_rpm: {
+            options: {
+                summary: 'Easily build RPM packages.',
+                description: 'A Grunt plugin for easily configuring and ' +
+                    'building RPM packages.',
+                group: 'Development/Tools',
+                release: 1,
+                license: 'MIT',
+                vendor: null,
+                defaultAttributes: {
+                    mode: 644
+                }
+            },
+            release: {
+                // Again, these are just examples, this package is not meant for
+                // actual distribution as an RPM!
+                files: [{
+                    cwd: 'tasks',
+                    src: '*.js',
+                    dest: '/opt/easyrpm',
+                    owner: 'raddude'
+                }, {
+                    cwd: 'tasks',
+                    src: 'lib/*.js',
+                    dest: '/opt/easyrpm',
+                    group: 'coolrunnings'
+                }]
             }
         }
     });
