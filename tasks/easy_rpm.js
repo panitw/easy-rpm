@@ -298,7 +298,7 @@ module.exports = function(grunt) {
                     config: file.config || false,
                     dir: file.dir || false,
                     mode: file.mode || null,
-                    user: file.owner || null,
+                    user: file.user || file.owner || null,
                     group: file.group || null
                 };
 
