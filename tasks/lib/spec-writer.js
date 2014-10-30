@@ -47,7 +47,7 @@ function bufferTagIfExists(buffer, spec, tag, label) {
     }
 }
 
-function bufferScriptBlock(buffer, arr, keyword, hideIfEmpty) {
+function bufferDirectiveBlock(buffer, arr, keyword, hideIfEmpty) {
     var i;
 
     if (hideIfEmpty && arr.length === 0) {
@@ -217,28 +217,32 @@ module.exports = function(spec, callback) {
 
     // Script sections.
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.prep, '%prep', true);
+    bufferDirectiveBlock(buffer, spec.scripts.prep, '%prep', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.build, '%build', true);
+    bufferDirectiveBlock(buffer, spec.scripts.build, '%build', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.install, '%install', true);
+    bufferDirectiveBlock(buffer, spec.scripts.install, '%install', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.check, '%check', true);
+    bufferDirectiveBlock(buffer, spec.scripts.check, '%check', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.clean, '%clean', true);
+    bufferDirectiveBlock(buffer, spec.scripts.clean, '%clean', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.preInstall, '%pre', true);
+    bufferDirectiveBlock(buffer, spec.scripts.preInstall, '%pre', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.postInstall, '%post', true);
+    bufferDirectiveBlock(buffer, spec.scripts.postInstall, '%post', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.preUninstall, '%preun', true);
+    bufferDirectiveBlock(buffer, spec.scripts.preUninstall, '%preun', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.postUninstall, '%postun', true);
+    bufferDirectiveBlock(buffer, spec.scripts.postUninstall, '%postun', true);
     buffer.ensureEmptyLine();
-    bufferScriptBlock(buffer, spec.scripts.verify, '%verifyscript', true);
+    bufferDirectiveBlock(buffer, spec.scripts.verify, '%verifyscript', true);
 
     // Files section.
     bufferFiles(buffer, spec.files);
+
+    // Changelog section.
+    buffer.ensureEmptyLine();
+    bufferDirectiveBlock(buffer, spec.other.changelog, '%changelog', true);
 
     callback(buffer.string(), null);
 };

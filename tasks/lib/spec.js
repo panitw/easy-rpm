@@ -243,6 +243,10 @@ var Spec = function() {
         defaultAttributes: null,
         list: []
     };
+
+    this.other = {
+        changelog: []
+    };
 };
 
 Spec.prototype._bulkArgAdd = function(arr, args) {
@@ -346,6 +350,10 @@ Spec.prototype.setDefaultAttributes = function(attrs) {
         group: attrs.group || null,
         dirMode: attrs.dirMode || null
     };
+};
+
+Spec.prototype.addChangelogs = function() {
+    this._bulkArgAdd(this.other.changelog, arguments);
 };
 
 module.exports = Spec;

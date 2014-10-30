@@ -442,5 +442,14 @@ describe('spec writer', function() {
                 writeAndAssertEqualsExpectedFile(spec, 'expect_34');
             });
         });
+
+        describe('when changelog entries are specified', function() {
+            it('should produce the %changelog section', function() {
+                spec.addChangelogs(
+                    '* Fri Oct 31 2014 Dr. Foo <foo@bar.com>',
+                    '- Redesign flux capacitor.');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_36');
+            });
+        });
     });
 });

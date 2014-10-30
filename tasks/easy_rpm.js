@@ -187,13 +187,23 @@ function applySpecSettings(grunt, options, spec) {
     if (options.hasOwnProperty('defaultAttributes')) {
         spec.setDefaultAttributes(options.defaultAttributes);
     }
+
+    // Add the changelogs.
+    if (options.hasOwnProperty('changelog')) {
+        var changelog;
+        if (_.isFunction(options.changelog)) {
+            changelog = options.changelog();
+        } else if (_.isArray(options.changelog)) {
+            changelog = options.changelog;
+        }
+        spec.addChangelogs.apply(spec, changelog);
+    }
 }
 
 module.exports = function(grunt) {
     grunt.registerMultiTask('easy_rpm', 'Easily create RPM packages.', function() {
         var pkg = loadPackageProperties(grunt),
             defaults = {
-                changelog: [],
                 tempDir: "tmp-" + shortid.generate(),
                 rpmDestination: ".",
                 keepTemp: false,
