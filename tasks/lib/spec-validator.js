@@ -1,5 +1,6 @@
 var validator = require('validator'),
-    urlvalidator = require('valid-url');
+    urlvalidator = require('valid-url'),
+    _ = require('lodash');
 
 function validateName(value, result) {
     if (!validator.isLength(value, 1)) {
@@ -97,13 +98,13 @@ function validatePackager(value, result) {
 }
 
 function validateAutoReq(value, result) {
-    if (typeof(value) !== 'boolean') {
+    if (!_.isBoolean(value)) {
         result.errors.push('AutoReq must be specified as a boolean.');
     }
 }
 
 function validateAutoProv(value, result) {
-    if (typeof(value) !== 'boolean') {
+    if (!_.isBoolean(value)) {
         result.errors.push('AutoProv must be specified as a boolean.');
     }
 }

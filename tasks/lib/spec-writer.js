@@ -1,3 +1,5 @@
+var _ = require('lodash');
+
 var LineBuffer = function() {
     this.lines = [];
     this.ensureEmpty = false;
@@ -36,11 +38,10 @@ LineBuffer.prototype.string = function() {
 };
 
 function bufferTagIfExists(buffer, spec, tag, label) {
-    if (spec.tags.hasOwnProperty(tag)) {
+    if (_.has(spec.tags, tag)) {
         var value = spec.tags[tag];
         if (value !== null) {
-            if ((typeof value === 'string' && value.length > 0) ||
-                typeof value === 'number') {
+            if ((_.isString(value) && value.length > 0) || _.isNumber(value)) {
                 buffer.add(label + ': ' + value);
             }
         }
@@ -98,9 +99,9 @@ function bufferFiles(buffer, files) {
                 directives.push('%dir');
             }
 
-            if ((file.hasOwnProperty('mode') && file.mode !== null) ||
-                (file.hasOwnProperty('user') && file.user !== null) ||
-                (file.hasOwnProperty('group') && file.group !== null)) {
+            if ((_.has(file, 'mode') && file.mode !== null) ||
+                (_.has(file, 'user') && file.user !== null) ||
+                (_.has(file, 'group') && file.group !== null)) {
                 attrs = '%attr(';
                 attrs += (file.mode || '-') + ', ';
                 attrs += (file.user || '-') + ', ';

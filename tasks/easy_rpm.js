@@ -395,7 +395,7 @@ module.exports = function(grunt) {
             if (options.hasOwnProperty('postPackageCreate')) {
                 var rpmPath = path.join(tmpDir, 'RPMS', spec.tags.buildArch);
 
-                if (typeof(options.postPackageCreate) === 'string') {
+                if (_.isString(options.postPackageCreate)) {
                     // TODO Deprecate post 1.5.0
                     grunt.log.writeln(chalk.gray(
                         'Deprecation warning: use the rpmDestination ' +
@@ -416,7 +416,7 @@ module.exports = function(grunt) {
                     } else {
                         grunt.fail.warn('Destination path is not a directory');
                     }
-                } else if (typeof(options.postPackageCreate) === 'function') {
+                } else if (_.isFunction(options.postPackageCreate)) {
                     options.postPackageCreate(rpmPath, outputFilename);
                 }
             }
