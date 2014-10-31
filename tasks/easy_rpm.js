@@ -93,7 +93,7 @@ function applySpecSettings(grunt, options, spec) {
     if (!_.has(options, 'license')) {
         _defaultOptionNotice(grunt, 'license', 'MIT');
     }
-    spec.tags.license = options.license || spec.tags.license;
+    spec.tags.license = options.license || 'MIT';
 
     spec.tags.epoch = options.epoch || spec.tags.epoch;
     spec.tags.distribution = options.distribution || spec.tags.distribution;
