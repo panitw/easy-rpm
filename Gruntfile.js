@@ -12,40 +12,8 @@ module.exports = function(grunt) {
 
     // Project configuration.
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-
-        bump: {
-            options: {
-                files: ['package.json'],
-                updateConfigs: ['pkg'],
-                commit: true,
-                commitMessage: 'Release %VERSION%',
-                commitFiles: ['package.json'],
-                createTag: true,
-                tagName: '%VERSION%',
-                tagMessage: 'Version %VERSION%',
-                push: true,
-                pushTo: 'origin',
-                gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d'
-            }
-        },
-
         jsbeautifier: {
             options: {
-                html: {
-                    braceStyle: 'collapse',
-                    indentChar: ' ',
-                    indentScripts: 'keep',
-                    indentSize: 4,
-                    maxPreserveNewlines: 10,
-                    preserveNewlines: true,
-                    unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u'],
-                    wrapLineLength: 0
-                },
-                css: {
-                    indentChar: ' ',
-                    indentSize: 4
-                },
                 js: {
                     braceStyle: 'collapse',
                     breakChainedMethods: false,
@@ -73,80 +41,92 @@ module.exports = function(grunt) {
         },
 
         jshint: {
-            all: [
-                'Gruntfile.js',
-                'tasks/*.js',
-                '<%= nodeunit.tests %>'
-            ],
             options: {
                 jshintrc: '.jshintrc'
+            },
+            all: [
+                'Gruntfile.js',
+                'tasks/**/*.js',
+                'test/**/*.js'
+            ]
+        },
+
+        mochaTest: {
+            test: {
+                options: {
+                    reporter: 'dot',
+                    clearRequireCache: true
+                },
+                src: ['test/**/*.js']
             }
         },
 
-        // Before generating any new files, remove any previously-created files.
-        clean: {
-            tests: ['tmp']
+        watch: {
+            js: {
+                options: {
+                    spawn: false
+                },
+                files: [
+                    '**/*.js',
+                    'test/**/*.spec'
+                ],
+                tasks: ['mochaTest']
+            }
         },
 
-        // Configuration to be run (and then tested).
+        // An example use of the plugin.
         easy_rpm: {
-            default_options: {
-                options: {
-                    version: "v1.0.0",
-                    release: 5,
-                    buildArch: "x86_64",
-                    tempDir: "tmp"
-                },
+            options: {
+                summary: 'Easily build RPM packages.',
+                description: 'A Grunt plugin for easily configuring and ' +
+                    'building RPM packages.',
+                group: 'Development/Tools',
+                release: 1,
+                license: 'MIT',
+                vendor: null,
+                defaultAttributes: {
+                    mode: 644
+                }
+            },
+            release: {
+                // Again, these are just examples, this package is not meant for
+                // actual distribution as an RPM!
                 files: [{
-                    cwd: 'test',
-                    src: ['**'],
-                    dest: '/tmp/rpmtest5',
-                    mode: '755',
-                    owner: "rpmbuilder",
-                    group: "rpmbuilder"
+                    cwd: 'tasks',
+                    src: '*.js',
+                    dest: '/opt/easyrpm',
+                    owner: 'raddude'
                 }, {
-                    config: 'true',
-                    cwd: 'test',
-                    src: ['**'],
-                    dest: '/tmp/rpmtest6',
-                    mode: '755',
-                    owner: "rpmbuilder",
-                    group: "rpmbuilder"
-                }, {
-                    doc: 'true',
-                    cwd: 'test',
-                    src: ['**'],
-                    dest: '/tmp/rpmtest7',
-                    mode: '755',
-                    owner: "rpmbuilder",
-                    group: "rpmbuilder"
+                    cwd: 'tasks',
+                    src: 'lib/*.js',
+                    dest: '/opt/easyrpm',
+                    group: 'coolrunnings'
                 }]
             }
-        },
-
-        // Unit tests.
-        nodeunit: {
-            tests: ['test/*_test.js']
         }
-
     });
 
     // Actually load this plugin's task(s).
     grunt.loadTasks('tasks');
 
     // These plugins provide necessary tasks.
-    grunt.loadNpmTasks('grunt-bump');
-    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-nodeunit');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-jsbeautifier');
+    grunt.loadNpmTasks('grunt-mocha-test');
+
+    // Handle watch events and setup the mochaTest task options accordingly.
+    var defaultTestSrc = grunt.config('mochaTest.test.src');
+    grunt.event.on('watch', function(action, filepath) {
+        grunt.config('mochaTest.test.src', defaultTestSrc);
+        if (filepath.match('test/*.js')) {
+            grunt.config('mochaTest.test.src', filepath);
+        }
+    });
 
     // Aliases
     grunt.registerTask('format', ['jsbeautifier']);
-
-    // Whenever the "test" task is run, first clean the "tmp" dir, then run this
-    // plugin's task(s), then test the result.
-    grunt.registerTask('test', ['clean', 'easy_rpm', 'nodeunit']);
+    grunt.registerTask('test', ['mochaTest']);
 
     // By default, lint and run all tests.
     grunt.registerTask('default', ['jshint', 'test']);
