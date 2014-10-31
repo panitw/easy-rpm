@@ -126,8 +126,9 @@ module.exports = function(grunt) {
 
     // Aliases
     grunt.registerTask('format', ['jsbeautifier']);
+    grunt.registerTask('test', ['mochaTest']);
 
     // By default, lint and run all tests.
-    grunt.registerTask('default', ['jshint', 'mochaTest']);
+    grunt.registerTask('default', ['jshint', 'test']);
 
 };
