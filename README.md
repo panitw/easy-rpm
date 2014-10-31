@@ -294,7 +294,7 @@ construction of the RPM file name.
 
 
 ### version
-`String`
+`String` (default: `'0.0.0'`)
 
 Used to set the version tag in your RPM package and also used in the
 construction of the RPM file name.

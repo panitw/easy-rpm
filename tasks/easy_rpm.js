@@ -45,7 +45,7 @@ function preserveCopy(grunt, srcpath, destpath, options) {
 }
 
 function _checkNotifyPackageInherit(grunt, pkg, options, propName) {
-    if (pkg.hasOwnProperty(propName) && !options.hasOwnProperty(propName)) {
+    if (_.has(pkg, propName) && !_.has(options, propName)) {
         grunt.log.writelns(chalk.gray('[Notice] Property inheritance from ' +
             'package.json: "' + propName +
             '" will be inherited by the ' +
@@ -64,26 +64,33 @@ function _defaultOptionNotice(grunt, propName, defaultVal) {
 // notification of default assignments.
 function applySpecSettings(grunt, options, spec) {
     spec.tags.name = options.name || spec.tags.name;
-    spec.tags.version = options.version || spec.tags.version;
 
-    if (!options.hasOwnProperty('release')) {
+    if (!_.has(options, 'version')) {
+        _defaultOptionNotice(grunt, 'version', '0.0.0');
+    }
+    spec.tags.version = options.version || '0.0.0';
+
+    if (!_.has(options, 'release')) {
         _defaultOptionNotice(grunt, 'release', '1');
     }
     spec.tags.release = options.release || '1';
 
-    if (!options.hasOwnProperty('buildArch')) {
+    if (!_.has(options, 'buildArch')) {
         _defaultOptionNotice(grunt, 'buildArch', 'noarch');
     }
     spec.tags.buildArch = options.buildArch || 'noarch';
 
+    if (!_.has(options, 'description')) {
+        _defaultOptionNotice(grunt, 'description', 'No Description');
+    }
     spec.tags.description = options.description || 'No Description';
 
-    if (!options.hasOwnProperty('summary')) {
+    if (!_.has(options, 'summary')) {
         _defaultOptionNotice(grunt, 'summary', 'No Summary');
     }
     spec.tags.summary = options.summary || 'No Summary';
 
-    if (!options.hasOwnProperty('license')) {
+    if (!_.has(options, 'license')) {
         _defaultOptionNotice(grunt, 'license', 'MIT');
     }
     spec.tags.license = options.license || spec.tags.license;
@@ -91,14 +98,14 @@ function applySpecSettings(grunt, options, spec) {
     spec.tags.epoch = options.epoch || spec.tags.epoch;
     spec.tags.distribution = options.distribution || spec.tags.distribution;
 
-    if (!options.hasOwnProperty('vendor')) {
+    if (!_.has(options, 'vendor')) {
         _defaultOptionNotice(grunt, 'vendor', 'Vendor');
     }
     spec.tags.vendor = options.vendor || 'Vendor';
 
     spec.tags.url = options.url || spec.tags.url;
 
-    if (!options.hasOwnProperty('group')) {
+    if (!_.has(options, 'group')) {
         _defaultOptionNotice(grunt, 'group', 'Development/Tools');
     }
     spec.tags.group = options.group || 'Development/Tools';
@@ -107,14 +114,14 @@ function applySpecSettings(grunt, options, spec) {
 
     // To maintain backwards compatability with the older API, the arrays
     // `dependencies` and `requires` are synonymous.
-    if (options.hasOwnProperty('dependencies')) {
+    if (_.has(options, 'dependencies')) {
         // TODO deprecate post 1.5.0
         grunt.log.writelns(chalk.gray('[Notice] Deprecation warning: ' +
             'the use of "dependencies" is deprecated in favour of ' +
             'the RPM "requires" and "conflicts" tags.'));
         spec.addRequirements.apply(spec, options.dependencies);
     }
-    if (options.hasOwnProperty('requires')) {
+    if (_.has(options, 'requires')) {
         spec.addRequirements.apply(spec, options.requires);
     }
 
