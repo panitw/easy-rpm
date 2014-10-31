@@ -260,6 +260,8 @@ module.exports = function(grunt) {
             args: buildArgs
         }, function(error, result, code) {
             if (error || code) {
+                grunt.log.error(result);
+                grunt.warn("Failed while building RPM", code);
                 done(false);
                 return;
             }
@@ -293,11 +295,6 @@ module.exports = function(grunt) {
             if (!options.keepTemp) {
                 grunt.log.writeln("Deleting tmp folder " + tmpDir);
                 grunt.file.delete(tmpDir);
-            }
-
-            if (error) {
-                grunt.log.error(result);
-                grunt.warn("Failed while building RPM", code);
             }
 
             done();
