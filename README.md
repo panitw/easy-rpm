@@ -13,7 +13,7 @@ The RPM tools can be installed on most unix-like systems, including Mac OSX.
 
 ### Linux
 ```shell
-sudo yum install rpmdevtools rpmlint
+sudo yum install rpmdevtools
 ```
 
 ### Mac OSX
@@ -34,12 +34,23 @@ Once the plugin has been installed, it may be enabled inside your Gruntfile
 with this line of JavaScript:
 
 ```js
-grunt.loadNpmTasks('grunt-easy-rpm');
+grunt.loadNpmTasks("grunt-easy-rpm");
 ```
 
-## The "easy_rpm" task
+## rpmlint
+You can lint your generated RPMs and SPEC files with `rpmlint` to ensure you
+meet the requirements for your target distribution(s).  It is worth noting
+that, while `rpmlint` will warn you of problems in your RPM or SPEC file, these
+do not necessarily mean that they are not usable.  For those who are not about
+to distribute their packages via the official package repositories, many of the
+warnings `rmplint` produces will be irrelevant (for example, Fedora requires a
+changelog in the SPEC file as part of their guidelines but RPMs without a
+changelog in the SPEC should install just fine).
+[`rpmlint` project page](http://rpmlint.sourceforge.net/)
 
-### Overview
+# The "easy_rpm" task
+
+## Overview
 In your project's Gruntfile, add a section named `easy_rpm` to the data object
 passed into `grunt.initConfig()`:
 
@@ -51,13 +62,13 @@ grunt.initConfig({
     },
     your_target: {
       // Target-specific file lists and/or options go here.
-    },
-  },
+    }
+  }
 })
 ```
 
-### Usage Examples
-#### Basic Usage
+## Usage Examples
+### Basic Usage
 In this example, the default options are used for most of the fields. Each file
 is copied individually with the directory structure being preserved.
 
@@ -68,23 +79,30 @@ definition.  In the example below, the target name is 'release'.
 grunt.initConfig({
   easy_rpm: {
     options: {
+      // These are the bare-minimum values required to create a properly named
+      // RPM package.  The plugin does contain defaults for these if you omit
+      // them, and will notify you when this occurs.
       name: "mypackage",
       version: "1.0.0",
-      release: "1",
+      release: 1,
       buildArch: "x86_64"
     },
     release: {
+      // Sets up the target source files as:
+      // /target/dir/output/file1.js
+      // /target/dir/output/file2.js
+      // /target/dir/output/file3.js
       files: [
-        {src: "output/file1.js", dest: "/target/dir"}, //Target = /target/dir/output/file1.js
-        {src: "output/file2.js", dest: "/target/dir"}, //Target = /target/dir/output/file2.js
-        {src: "output/file3.js", dest: "/target/dir"}, //Target = /target/dir/output/file3.js
+        {src: "output/file1.js", dest: "/target/dir"},
+        {src: "output/file2.js", dest: "/target/dir"},
+        {src: "output/file3.js", dest: "/target/dir"}
       ]
-    },
-  },
+    }
+  }
 })
 ```
 
-#### Using CWD (current working directory)
+### Using CWD (current working directory)
 The `cwd` attribute is used to define the working directory for an individual
 or set of files.  When this attribute is set, the `cwd` is removed from the
 resulting target path.  Any directory structure below the `cwd` is preserved.
@@ -95,21 +113,25 @@ grunt.initConfig({
     options: {
       name: "mypackage",
       version: "1.0.0",
-      release: "1",
+      release: 1,
       buildArch: "x86_64"
     },
     release: {
+      // Sets up the target source files as:
+      // /target/dir/file1.js
+      // /target/dir/sub1/file2.js
+      // /target/dir/sub2/file3.js
       files: [
-        {cwd: "output", src: "output/file1.js", dest: "/target/dir"}, //Target = /target/dir/file1.js
-        {cwd: "output", src: "output/sub1/file2.js", dest: "/target/dir"}, //Target = /target/dir/sub1/file2.js
-        {cwd: "output", src: "output/sub2/file3.js", dest: "/target/dir"}, //Target = /target/dir/sub2/file3.js
+        {cwd: "output", src: "output/file1.js",      dest: "/target/dir"},
+        {cwd: "output", src: "output/sub1/file2.js", dest: "/target/dir"},
+        {cwd: "output", src: "output/sub2/file3.js", dest: "/target/dir"}
       ]
-    },
-  },
+    }
+  }
 })
 ```
 
-#### Using Wildcards
+### Using Wildcards
 File lists can also be generated using wildcards whose syntax is defined by
 [node-glob](https://github.com/isaacs/node-glob).  Note that this can also be
 paired with the above-mentioned `cwd` attribute.
@@ -120,19 +142,19 @@ grunt.initConfig({
     options: {
       name: "mypackage",
       version: "1.0.0",
-      release: "1",
+      release: 1,
       buildArch: "x86_64"
     },
     release: {
       files: [
-        {src: "output/**", dest: "/target/dir"}, //Target = All files & directory structure under /output folders
+        {src: "output/**", dest: "/target/dir"}
       ]
-    },
-  },
+    }
+  }
 })
 ```
 
-#### Excluding Files
+### Excluding Files
 Files can be excluded from packaging by adding them to the `excludeFiles` list.
 The node-glob wildcard syntax can be used to specify exclusions as well.  Note
 that the paths to exclude apply to the source file paths.
@@ -143,7 +165,7 @@ grunt.initConfig({
     options: {
       name: "mypackage",
       version: "1.0.0",
-      release: "1",
+      release: 1,
       buildArch: "x86_64"
     },
     release: {
@@ -155,14 +177,19 @@ grunt.initConfig({
         "**/index.html",
         "routes/fileA.js"
       ]
-    },
-  },
+    }
+  }
 })
 ```
 
-#### Setting Target Mode, Owner, and Group
-Each target file can have it's mode, owner, and group set by specifying these
-values in the file elements.
+### Setting File Mode, User (Owner), and Group, %attr
+Each target file can have it's `mode`, `user`, and `group` set by specifying
+these values in the file elements.  Note that, per the RPM SPEC file
+specifications, values for `mode` must be numeric.  Additionally, `user` and
+`group` cannot be UIDs (numeric) but must be names (alphanumeric).
+
+Note that, for backwards compatibility, setting `owner` is equivalent to
+setting the `user` property.
 
 ```js
 grunt.initConfig({
@@ -170,24 +197,56 @@ grunt.initConfig({
     options: {
       name: "mypackage",
       version: "1.0.0",
-      release: "1",
+      release: 1,
       buildArch: "x86_64"
     },
     release: {
       files: [
         {src: "output/file1.js", dest: "/target/dir", mode: "755"},
-        {src: "output/file2.js", dest: "/target/dir", mode: "o+x", owner: "mysql"},
-        {src: "output/file3.js", dest: "/target/dir", owner: "admin", group: "admin"},
-        {src: "output2/**", dest: "/target/dir", mode: "644"}, //Works with wildcard as well
+        {src: "output/file2.js", dest: "/target/dir", mode: "700", user: "mysql"},
+        {src: "output/file3.js", dest: "/target/dir", user: "admin", group: "admin"},
+        {src: "output2/**", dest: "/target/dir", mode: "644"}
       ]
-    },
-  },
+    }
+  }
 })
 ```
 
-#### Setting %doc and %config
+### Setting Default Attributes, %defattr
+You can set the default attributes for all files and directories in the package
+by defining the `defaultAttributes` property in the options.  This property
+should be an object which takes any or all of the following properties:
+`mode`, `user`, `group`, `dirMode`.
+
+```js
+grunt.initConfig({
+  easy_rpm: {
+    options: {
+      name: "mypackage",
+      version: "1.0.0",
+      release: 1,
+      buildArch: "x86_64",
+      defaultAttributes: {
+        mode: 644,
+        user: 'mysql',
+        group: 'mysql',
+        dirMode: 644
+      }
+    },
+    release: {
+      files: [
+        {src: "output/file1.js", dest: "/target/dir"},
+        {src: "output/file2.js", dest: "/target/dir"}
+      ]
+    }
+  }
+})
+```
+
+### Setting %doc, %config, and %dir
 Target files can be marked as documentation or configuration files by setting
-`doc` and `config` to `'true'` as needed.
+`doc`, `config`, and `dir` to `true` as needed.  For more detailed information
+on how these directives operate, consult the RPM manual.
 
 ```js
 grunt.initConfig({
@@ -195,184 +254,292 @@ grunt.initConfig({
     options: {
       name: "mypackage",
       version: "1.0.0",
-      release: "1",
+      release: 1,
       buildArch: "x86_64"
     },
     release: {
       files: [
-        {src: "output/file1.js", dest: "/target/dir", mode: "755"},
-        {doc:'true', cwd:'output', src: "README", dest: "/target/dir", mode: "o+x", owner: "mysql"},
-        {config:'true', cwd:'output', src: "mypackage.conf", dest: "/etc/mypackage", owner: "admin", group: "admin"}
+        {doc: true, cwd:"output", src: "README", dest: "/target/dir"},
+        {config: true, cwd: "output", src: "mypackage.conf", dest: "/etc/mypackage", owner: "admin", group: "admin"}
       ]
-    },
-  },
+    }
+  }
 })
 ```
 
-### Options
-Note that some options inherit their values from your `package.json`.  These
-options are marked by 'Inherits from `package.json`'.
+## SPEC Validations
+This task performs some minor validations on the options provided that result
+in SPEC file generation.  These validations are meant to be distribution
+agnostic; they will only give warnings for possibly problematic settings or
+deviations from the baseline RPM specification.  Errors are issued for options
+that will definitely cause problems when building or using the RPM.  It should
+be noted that the task will fail if any errors occur during validation.
 
-#### options.name
-Type: `String`
-Default value: `'noname'`
+## Options
+There are many options available since RPM has many configurable aspects.
+Three properties from the `package.json` (if it exists) are inherited by the
+options if they do not specify them.  These are: `name`, `version`, and
+`description`.  If these are not specified in the options, the task will notify
+you of the inheritance when run.
 
-A string value that is used to set at the name of your RPM package. This value
-is also used in the construction of the RPM file name.
+For backwards compatibility, some properties are provided with default values
+if they are not specified in the options.  When these defaults are used, the
+task will notify you of them when run.
 
-'Inherits from `package.json`'.
+### name
+`String` (default: `'noname'`)
 
-#### options.summary
-Type: `String`
-Default value: `'No Summary'`
+Used to set at the name tag in your RPM package and also used in the
+construction of the RPM file name.
 
-A string value that is used to set as the summary text of your RPM package.
 
-#### options.description
-Type: `String`
-Default value: `'No Description'`
+### version
+`String` (default: `'0.0.0'`)
 
-A string value that is used to set as the description of your RPM package.
+Used to set the version tag in your RPM package and also used in the
+construction of the RPM file name.
 
-'Inherits from `package.json`'.
+### release
+`String` | `Number` (default: `1`)
 
-#### options.version
-Type: `String`
-Default value: `'0.1.0'`
+Used to set the release tag in your RPM package and also used in the
+construction of the RPM file name.
 
-A string value that is used to set as the version of your RPM package. This
-value is also used in the construction of the RPM file name.
-
-'Inherits from `package.json`'.
-
-#### options.release
-Type: `String`
-Default value: `'1'`
-
-A string value that is used to set as the release of your RPM package. This
-value is also used in the construction of the RPM file name.
-
-#### options.license
-Type: `String`
-Default value: `'MIT'`
-
-A string value that is used to specify the license type of your RPM package.
-
-#### options.vendor
-Type: `String`
-Default value: `'Vendor'`
-
-A string value that is used to set as the Vendor property of your RPM package.
-
-#### options.group
-Type: `String`
-Default value: `'Development/Tools'`
-
-A string value that is used to specify the group of your RPM package.
-
-#### options.buildArch
-Type: `String`
-Default value: `'noarch'`
+### buildArch
+`String` (default: `'noarch'`)
 
 A string value that is used to set specify the target architecture of your RPM
 package. This value is also used in the construction of the RPM file name.
 
-#### options.prefix
-Type: `String`
-Default value: `undefined`
+### summary
+`String` (default: `'No Summary'`)
+
+Used to set the summary tag in your RPM package.
+
+### description
+`String` (default: `'No Description'`)
+
+Used to set the description directive section in your RPM package.
+
+### license
+`String` (default: `'MIT'`)
+
+Used to specify the license tag in your RPM package.
+
+### vendor
+`String` (default: `'Vendor'`)
+
+Used to set the vendor tag in your RPM package.
+
+### group
+`String` (default: `'Development/Tools'`)
+
+Used to specify the group tag in your RPM package.
+
+### prefix
+`String`
 
 This will specify the relocatable root of the package so that it may be
 relocated by the user at install time.  The manual entry for the
 [prefix tag](http://www.rpm.org/max-rpm/s1-rpm-reloc-prefix-tag.html) explains
 the use case quite well.
 
-#### options.url
-Type: `String`
-Default Value: `""`
+### url
+`String`
 
 A URL to the project homepage or documentation of the project. Defined in the
 [spec-file specification](http://www.rpm.org/wiki/PackagerDocs/Spec#URL:andPackager:Tags).
 
-#### options.changelog
-Type: `Array` or `Function`
-Default Value: `""`
+### changelog
+`Array` | `Function`
 
-An array of changelog lines or a function called to create an array of lines containing
-the changelog. This will add the `%changelog` to the spec-file.
+An array of changelog lines or a function called to create an array of lines
+containing the changelog. This will add the changelog directive block to the
+spec-file.
 
-_NOTE:_ You will still have to adhere to the changelog syntax to use this properly
-for more information read the [Fedora packaging guidelines on Changelogs](http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs)!
+_NOTE:_ You will still have to adhere to the changelog syntax to use this
+properly for more information read the
+[Fedora packaging guidelines on Changelogs](http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs).
 
-#### options.dependencies
-Type: `Array<String>`
-Default value: `[]`
+### requires
+`Array<String>`
+
+An array of packages that this package depends on (e.g.
+`["nodejs >= 0.10.22", "libpng"]`).
+
+### conflicts
+`Array<String>`
+
+An array of packages that this package conflicts with (e.g.
+`["cobol", "sparta > 300"]`).
+
+### dependencies (deprecated)
+`Array<String>`
 
 An array of packages that this package depends on (e.g. `["nodejs >= 0.10.22"]`).
-This is mapped to the `Requires` property in spec file.
+**Note that this is deprecated in favour of `requires`.** This is mapped to the
+`Requires` property in spec file.
 
-#### options.preInstallScript
-Type: `Array<String>`
-Default value: `[]`
+### autoReq, autoProv
+`Boolean` (default: `true`)
+
+These tags control automatic dependency processing while the package is being
+built.  Their default state of `true` is not a decision by this project but
+represents the default action taken by RPM.  When both `autoReq` and `autoProv`
+are set to `false`, the `AutoReqProv` tag will instead be used with a value of
+`no` in the SPEC file.
+
+### excludeArchs
+`Array<String>`
+
+An array specifying which architectures to prevent the RPM from building on
+(e.g. `["sparc"]`).
+
+### exclusiveArchs
+`Array<String>`
+
+An array specifying _only_ the architectures the RPM should build on
+(e.g. `["x86_64"]`).
+
+### excludeOS
+`Array<String>`
+
+An array specifying which operating systems to prevent the RPM from building on
+(e.g. `["sparc"]`).
+
+### exclusiveOS
+`Array<String>`
+
+An array specifying _only_ the operating systems the RPM should build on
+(e.g. `["x86_64"]`).
+
+### buildRoot
+`String`
+
+Used to define an alternate build root.  Use this one with caution and
+[consult the manual](http://www.rpm.org/max-rpm-snapshot/ch-rpm-anywhere.html).
+You will likely need to make use of the `cleanScript` option when specifying
+this property.
+
+### sources
+`Array<String>`
+
+Used to specify the locations the source code is provided by the developer(s).
+(Read more about this tag)[http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-tags.html].
+
+### noSources
+`Array<String>`
+
+Used to direct RPM to omit one or more source files from the source package.
+(Read more about this tag)[http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-tags.html].
+
+### patches
+`Array<String>`
+
+The patch tag is used to identify which patches are associated with the
+software being packaged. The patch files are kept in RPM's SOURCES directory,
+so only the name of the patch file should be specified.
+
+### noPatches
+`Array<String>`
+
+Just like the nosource tag, the nopatch tag is used to direct RPM to omit
+something from the source package. In the case of nosource, that "something"
+was one or more sources. For the nopatch tag, the "something" is one or more
+patches.
+
+### prepScript
+`Array<String>`
+
+The first script that RPM executes during a build.  Each element in the array
+provided will be a line in the `%prep` directive block of the SPEC file.
+[There are also some useful macros that can be used here](http://www.rpm.org/max-rpm-snapshot/s1-rpm-inside-macros.html).
+
+### buildScript
+`Array<String>`
+
+The build script is run after the prep script.  Generally it is used for things
+like running `make`.
+
+### installScript
+`Array<String>`
+
+The install script is run after the build script and is used for running the
+commands that perform installation related tasks.
+
+### checkScript
+`Array<String>`
+
+The check script is run after the build script and is used for running the
+commands that perform installation checking tasks (test suites, etc.)
+
+### cleanScript
+`Array<String>`
+
+The clean script is used to clean up the build directory tree.  RPM usually
+does this automatically but this is especially useful for packages that
+specify a `buildRoot`.
+
+### preInstallScript
+`Array<String>`
 
 An array of commands to be executed before the installation. Each element in
 the array represents a command.
 
-#### options.postInstallScript
-Type: `Array<String>`
-Default value: `[]`
+### postInstallScript
+`Array<String>`
 
 An array of commands to be executed after the installation. Each element in
 the array represents a command.
 
-#### options.preUninstallScript
-Type: `Array<String>`
-Default value: `[]`
+### preUninstallScript
+`Array<String>`
 
 An array of commands to be executed before uninstallation. Each element in
 the array represents a command.
 
-#### options.postUninstallScript
-Type: `Array<String>`
-Default value: `[]`
+### postUninstallScript
+`Array<String>`
 
 An array of commands to be executed after uninstallation. Each element in
 the array represents a command.
 
-#### options.tempDir
-Type: `String`
-Default value: `'tmp-'+<auto_gen_id>`
+### verifyScript
+`Array<String>`
 
-Sets the temporary path name that stores the structure that required by the
-`rpmbuild` command.
+This script is executed whenever the installed package is verified by RPMs
+verification command.  Effectively, it should be used to verify the the
+correct installation of the package.  Note that RPM already verifies the
+existence of the package's files along with their file attributes.  Thus, the
+contents of this script should focus on other aspects of the installation.
 
-#### options.postPackageCreate
-Type: `String` | `function(rpmPath, rpmFilename)`
-Default value: `null`
+### postPackageCreate
+`String` (deprecated) | `function(rpmPath, rpmFilename)`
 
 When a string, sets where to copy the rpm after it has been created.
+**Note that this is deprecated in favour of the `rpmDestination` property.**
 
 When given a function, the function is executed when the package has been
 created and provided with two arguments: the path and filename of the newly
 created package.
 
-#### options.keepTemp
-Type: `Boolean`
-Default value: `false`
+### rpmDestination
+`String` (default: `'.'`)
 
-A boolean value to tell the script to keep the temp folder after the package is built. Probably can be used for problem investigation.
+Location where the resulting RPM should be placed.
 
-#### options.rpmDestination
-Type: `String`
-Default value: `.`
+### tempDir
+`String` (default: `'tmp-<auto_gen_id>'`)
 
-Location where the resulting RPM should be placed, `.` by default.
+Sets the temporary path name that stores the structure that required by the
+`rpmbuild` command.  Note that this is used for the setup and building of the
+package and does not affect the RPM itself.
 
-#### options.quoteFilePaths
-Type: `Boolean`
-Default value: `true`
+### keepTemp
+`Boolean` (default: `false`)
 
-Toggles quoting the target file paths in the RPM spec.  It is generally best
-to keep this setting to true.
+When `true`, will keep the temporary directory used to build the RPM after the
+it is built. This is useful for problem investigation.
 
 ## Contributing
 For those interested in contributing to the project, there are a few simple
