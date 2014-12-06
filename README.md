@@ -104,9 +104,22 @@ grunt.initConfig({
 
 ### Using CWD (current working directory)
 The `cwd` attribute is used to define the working directory for an individual
-or set of files.  When this attribute is set, the `cwd` is removed from the
-resulting target path.  Any directory structure below the `cwd` is preserved.
+or set of files.  When this attribute is set, `src` entries are relative to the
+`cwd` path . This task uses the [Grunt implementation of file expansion](http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically)
+which may be of use as additional information.
 
+Given the directory structure:
+```
+local/
+  text/
+    a.txt
+    b.txt
+  image/
+    c.png
+    d.png
+```
+
+And the configuration:
 ```js
 grunt.initConfig({
   easy_rpm: {
@@ -117,18 +130,24 @@ grunt.initConfig({
       buildArch: "x86_64"
     },
     release: {
-      // Sets up the target source files as:
-      // /target/dir/file1.js
-      // /target/dir/sub1/file2.js
-      // /target/dir/sub2/file3.js
       files: [
-        {cwd: "output", src: "output/file1.js",      dest: "/target/dir"},
-        {cwd: "output", src: "output/sub1/file2.js", dest: "/target/dir"},
-        {cwd: "output", src: "output/sub2/file3.js", dest: "/target/dir"}
+        {src: '*.txt', dest: '/opt/text', cwd: 'local/text'},
+        {src: 'image/*.png', dest: '/opt'}
       ]
     }
   }
 })
+```
+
+Results in the following RPM structure:
+```
+/opt/
+  text/
+    a.txt
+    b.txt
+  image/
+    c.png
+    d.png
 ```
 
 ### Using Wildcards
@@ -360,6 +379,30 @@ spec-file.
 _NOTE:_ You will still have to adhere to the changelog syntax to use this
 properly for more information read the
 [Fedora packaging guidelines on Changelogs](http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs).
+
+### defines
+`Array<String>`
+
+An array of arbitrary `%define` statements to be added to the RPM SPEC file.
+Note that this property can be set on both the `options` and target
+configurations.  When set on `options`, the define values will be added to all
+targets.
+
+Setting the option as so:
+```js
+{
+  defines: [
+    '_binary_filedigest_algorithm 1',
+    '_binary_payload w9.gzdio'
+  ]
+}
+```
+
+Will add the following to the SPEC file:
+```
+%define _binary_filedigest_algorithm 1
+%define _binary_payload w9.gzdio
+```
 
 ### requires
 `Array<String>`

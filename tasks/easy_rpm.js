@@ -34,6 +34,25 @@ function loadPackageProperties(grunt) {
     return {};
 }
 
+// Sets the `prop` property on options to the concatenation of that property
+// from both options and data, if both exist.  Otherwise, if either exist
+// exclusively, that array will be set to the options.  When neither exist,
+// nothing is done to the options object.
+function concatOptionDataArrays(options, data, prop) {
+    if (!_.has(options, prop) && !_.has(data, prop)) {
+        return;
+    }
+
+    var combined = [];
+    if (_.isArray(options[prop])) {
+        combined = combined.concat(options[prop]);
+    }
+    if (_.isArray(data[prop])) {
+        combined = combined.concat(data[prop]);
+    }
+    options[prop] = combined;
+}
+
 function preserveCopy(grunt, srcpath, destpath, options) {
     grunt.file.copy(srcpath, destpath, options);
     try {
@@ -111,6 +130,10 @@ function applySpecSettings(grunt, options, spec) {
     spec.tags.group = options.group || 'Development/Tools';
 
     spec.tags.packager = options.packager || spec.tags.packager;
+
+    if (_.has(options, 'defines')) {
+        spec.addDefines.apply(spec, options.defines);
+    }
 
     // To maintain backwards compatability with the older API, the arrays
     // `dependencies` and `requires` are synonymous.
@@ -223,6 +246,7 @@ module.exports = function(grunt) {
             done = this.async(),
             options, tmpDir, buildRoot, i;
 
+
         // Check the loaded package properties and issue notices if they are
         // not already specified in the options - they will be inherited by
         // the options object in that case.
@@ -234,6 +258,9 @@ module.exports = function(grunt) {
         //    gruntInit > package > defaults
         // Options on the left take precedence over those on the right.
         options = this.options(_.defaults(pkg, defaults));
+
+        // Allow defines to be set in both the options and target configs.
+        concatOptionDataArrays(options, this.data, 'defines');
 
         // Setup paths for storing the RPM directory structure and source
         // file destination (BUILDROOT).
