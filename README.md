@@ -104,9 +104,22 @@ grunt.initConfig({
 
 ### Using CWD (current working directory)
 The `cwd` attribute is used to define the working directory for an individual
-or set of files.  When this attribute is set, the `cwd` is removed from the
-resulting target path.  Any directory structure below the `cwd` is preserved.
+or set of files.  When this attribute is set, `src` entries are relative to the
+`cwd` path . This task uses the [Grunt implementation of file expansion](http://gruntjs.com/configuring-tasks#building-the-files-object-dynamically)
+which may be of use as additional information.
 
+Given the directory structure:
+```
+local/
+  text/
+    a.txt
+    b.txt
+  image/
+    c.png
+    d.png
+```
+
+And the configuration:
 ```js
 grunt.initConfig({
   easy_rpm: {
@@ -117,18 +130,24 @@ grunt.initConfig({
       buildArch: "x86_64"
     },
     release: {
-      // Sets up the target source files as:
-      // /target/dir/file1.js
-      // /target/dir/sub1/file2.js
-      // /target/dir/sub2/file3.js
       files: [
-        {cwd: "output", src: "output/file1.js",      dest: "/target/dir"},
-        {cwd: "output", src: "output/sub1/file2.js", dest: "/target/dir"},
-        {cwd: "output", src: "output/sub2/file3.js", dest: "/target/dir"}
+	{src: '*.txt', dest: '/opt/text', cwd: 'local/text'},
+	{src: 'image/*.png', dest: '/opt'}
       ]
     }
   }
 })
+```
+
+Results in the following RPM structure:
+```
+/opt/
+  text/
+    a.txt
+    b.txt
+  image/
+    c.png
+    d.png
 ```
 
 ### Using Wildcards
