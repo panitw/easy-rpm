@@ -380,6 +380,30 @@ _NOTE:_ You will still have to adhere to the changelog syntax to use this
 properly for more information read the
 [Fedora packaging guidelines on Changelogs](http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs).
 
+### defines
+`Array<String>`
+
+An array of arbitrary `%define` statements to be added to the RPM SPEC file.
+Note that this property can be set on both the `options` and target
+configurations.  When set on `options`, the define values will be added to all
+targets.
+
+Setting the option as so:
+```js
+{
+  defines: [
+    '_binary_filedigest_algorithm 1',
+    '_binary_payload w9.gzdio'
+  ]
+}
+```
+
+Will add the following to the SPEC file:
+```
+%define _binary_filedigest_algorithm 1
+%define _binary_payload w9.gzdio
+```
+
 ### requires
 `Array<String>`
 
