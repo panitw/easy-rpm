@@ -267,11 +267,6 @@ module.exports = function(grunt) {
         tmpDir = path.resolve(options.tempDir);
         buildRoot = path.resolve(tmpDir + "/BUILDROOT/");
 
-        // In order to build out the RPM into our specified directory, we
-        // must append a %define directive to the spec that indicates where
-        // the top level of the build is.
-        spec.addDefines('_topdir ' + tmpDir);
-
         // Assign the options to the spec file object.
         applySpecSettings(grunt, options, spec);
 
@@ -392,8 +387,15 @@ module.exports = function(grunt) {
 
         // Spawn rpmbuild tool.
         var buildCmd = 'rpmbuild';
+
         var buildArgs = [
             '-bb',
+
+            // In order to build out the RPM into our specified directory, we
+            // must append a --define directive to rpmbuild that indicates where
+            // the top level of the build is.
+            '--define',
+            '_topdir ' + tmpDir,
             '-vv',
             '--buildroot',
             buildRoot,
