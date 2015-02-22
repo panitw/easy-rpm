@@ -148,10 +148,10 @@ function applySpecSettings(grunt, options, spec) {
         spec.addRequirements.apply(spec, options.requires);
     }
 
-    if (options.autoReq == false) {
+    if (options.autoReq === false) {
         spec.tags.autoReq = options.autoReq;
     }
-    if (options.autoProv == false) {
+    if (options.autoProv === false) {
         spec.tags.autoProv = options.autoProv;
     }
 
