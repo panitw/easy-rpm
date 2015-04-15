@@ -147,10 +147,12 @@ function applySpecSettings(grunt, options, spec) {
     if (_.has(options, 'requires')) {
         spec.addRequirements.apply(spec, options.requires);
     }
-
-    spec.tags.autoReq = options.autoReq || spec.tags.autoReq;
-    spec.tags.autoProv = options.autoProv || spec.tags.autoProv;
-
+    if (_.has(options, 'autoReq')) {
+        spec.tags.autoReq = options.autoReq;
+    }
+    if (_.has(options, 'autoProv')) {
+        spec.tags.autoProv = options.autoProv;
+    }
     if (options.hasOwnProperty('excludeArchs')) {
         spec.addExcludeArchs.apply(spec, options.excludeArchs);
     }
