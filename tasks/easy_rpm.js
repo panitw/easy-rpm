@@ -332,6 +332,7 @@ module.exports = function(grunt) {
                     path: path.join(file.dest, srcPath),
                     doc: file.doc || false,
                     config: file.config || false,
+                    noreplace: file.noreplace || false,
                     dir: file.dir || false,
                     mode: file.mode || null,
                     user: file.user || file.owner || null,
