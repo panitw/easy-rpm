@@ -147,6 +147,9 @@ function applySpecSettings(grunt, options, spec) {
     if (_.has(options, 'requires')) {
         spec.addRequirements.apply(spec, options.requires);
     }
+    if (_.has(options, 'provides')) {
+        spec.addProvides.apply(spec, options.provides);
+    }
 
     if (options.autoReq === false) {
         spec.tags.autoReq = options.autoReq;
