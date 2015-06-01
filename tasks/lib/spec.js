@@ -94,6 +94,10 @@ var Spec = function() {
         // even more specific, a package's release may be included as well.
         requires: [],
 
+        // The provides tag is used to alert RPM to the fact that the package
+        // will provide a virtual package.
+        provides: [],
+
         // The conflicts tag is the logical complement to the requires tag. The
         // requires tag is used to specify what packages must be present in
         // order for the current package to operate properly. The conflicts tag
@@ -261,6 +265,10 @@ Spec.prototype.addDefines = function() {
 
 Spec.prototype.addRequirements = function() {
     this._bulkArgAdd(this.tags.requires, arguments);
+};
+
+Spec.prototype.addProvides = function() {
+    this._bulkArgAdd(this.tags.provides, arguments);
 };
 
 Spec.prototype.addConflicts = function() {

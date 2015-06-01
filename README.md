@@ -410,6 +410,11 @@ Will add the following to the SPEC file:
 An array of packages that this package depends on (e.g.
 `["nodejs >= 0.10.22", "libpng"]`).
 
+### provides
+`Array<String>`
+
+An array of virtual packages that this package provides.
+
 ### conflicts
 `Array<String>`
 

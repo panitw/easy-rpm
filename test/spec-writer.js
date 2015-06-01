@@ -84,6 +84,7 @@ describe('spec writer', function() {
             spec.tags.autoReq = false;
             spec.tags.autoProv = false;
             spec.addRequirements('quux > 1.6.9', 'k9 <= 2.0');
+            spec.addProvides('virtualeasyrpm = 0.0.1');
             spec.addConflicts('quux = 1.6.9', 'baz < 1.2');
             spec.addExcludeArchs('sparc', 'alpha');
             spec.addExclusiveArchs('x86', 'powerpc');
@@ -449,6 +450,14 @@ describe('spec writer', function() {
                     '* Fri Oct 31 2014 Dr. Foo <foo@bar.com>',
                     '- Redesign flux capacitor.');
                 writeAndAssertEqualsExpectedFile(spec, 'expect_36');
+            });
+        });
+
+
+        describe('provides tag', function() {
+            it('should only produce the Provides tag', function() {
+                spec.addProvides('virtualeasyrpm = 0.0.1');
+                writeAndAssertEqualsExpectedFile(spec, 'expect_37');
             });
         });
     });

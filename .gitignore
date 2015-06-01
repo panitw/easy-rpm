@@ -3,5 +3,6 @@ npm-debug.log
 tmp
 .project
 
+*.swp
 *.iml
 .idea
