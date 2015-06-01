@@ -1,7 +1,7 @@
 {
   "name": "grunt-easy-rpm",
   "description": "Easily create RPM packages.",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "homepage": "https://github.com/panitw/easy-rpm",
   "author": {
     "name": "Panit Wechasil"
