@@ -262,9 +262,9 @@ grunt.initConfig({
 })
 ```
 
-### Setting %doc, %config, and %dir
+### Setting %doc, %config, %config(noreplace), and %dir
 Target files can be marked as documentation or configuration files by setting
-`doc`, `config`, and `dir` to `true` as needed.  For more detailed information
+`doc`, `config`, `noreplace`, and `dir` to `true` as needed. `noreplace` supersedes `config`. For more detailed information
 on how these directives operate, consult the RPM manual.
 
 ```js
