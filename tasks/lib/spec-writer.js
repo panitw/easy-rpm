@@ -87,7 +87,9 @@ function bufferFiles(buffer, files) {
                 directives.push('%doc');
             }
 
-            if (file.config === true) {
+            if (file.noreplace === true) {
+                directives.push('%config(noreplace)');
+            } else if (file.config === true) {
                 directives.push('%config');
             }
 
