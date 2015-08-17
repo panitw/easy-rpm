@@ -202,7 +202,7 @@ function applySpecSettings(grunt, options, spec) {
     if (options.hasOwnProperty('cleanScript')) {
         spec.addCleanScripts.apply(spec, options.cleanScript);
     }
-    
+
     if (options.hasOwnProperty('installScript')) {
         spec.addInstallScripts.apply(spec, options.installScript);
     }
