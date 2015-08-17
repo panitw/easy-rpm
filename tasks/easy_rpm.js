@@ -203,6 +203,9 @@ function applySpecSettings(grunt, options, spec) {
         spec.addCleanScripts.apply(spec, options.cleanScript);
     }
 
+    if (options.hasOwnProperty('installScript')) {
+        spec.addInstallScripts.apply(spec, options.installScript);
+    }
     if (options.hasOwnProperty('preInstallScript')) {
         spec.addPreInstallScripts.apply(spec, options.preInstallScript);
     }
