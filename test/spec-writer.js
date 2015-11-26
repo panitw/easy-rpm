@@ -330,6 +330,26 @@ describe('spec writer', function() {
             });
         });
 
+        describe('when marked as a noreplace file', function() {
+            it('should produce the %config(noreplace) directive', function() {
+                spec.addFiles({
+                    path: '/opt/easyrpm/package.json',
+                    config: true
+                }, {
+                    path: '/opt/easyrpm/foo.c'
+                }, {
+                    path: '/opt/easyrpm/more.conf',
+                    noreplace: true
+                },
+                {
+                    path: '/opt/easyrpm/third.json',
+                    config: true,
+                    noreplace: true
+                });
+                writeAndAssertEqualsExpectedFile(spec, 'expect_38');
+            });
+        });
+
         describe('when marked as a ghost', function() {
             it('should produce the %ghost directive', function() {
                 spec.addFiles({

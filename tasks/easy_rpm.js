@@ -203,6 +203,9 @@ function applySpecSettings(grunt, options, spec) {
         spec.addCleanScripts.apply(spec, options.cleanScript);
     }
 
+    if (options.hasOwnProperty('installScript')) {
+        spec.addInstallScripts.apply(spec, options.installScript);
+    }
     if (options.hasOwnProperty('preInstallScript')) {
         spec.addPreInstallScripts.apply(spec, options.preInstallScript);
     }
@@ -332,6 +335,7 @@ module.exports = function(grunt) {
                     path: path.join(file.dest, srcPath),
                     doc: file.doc || false,
                     config: file.config || false,
+                    noreplace: file.noreplace || false,
                     dir: file.dir || false,
                     mode: file.mode || null,
                     user: file.user || file.owner || null,
