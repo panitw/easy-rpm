@@ -405,10 +405,12 @@ Will add the following to the SPEC file:
 ```
 
 ### requires
-`Array<String>`
+`Array<String|Object>`
 
 An array of packages that this package depends on (e.g.
-`["nodejs >= 0.10.22", "libpng"]`).
+`["nodejs >= 0.10.22", "libpng"]`). Can also include an object
+to map dependencies for scriptlets, e.g.
+`["nodejs >= 0.10.22", {"post": ["%{systemd_post_requires}"]}]`
 
 ### provides
 `Array<String>`
