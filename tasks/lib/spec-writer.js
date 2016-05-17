@@ -150,6 +150,9 @@ module.exports = function(spec, callback) {
     if (spec.tags.requires.length > 0) {
         buffer.add('Requires: ' + spec.tags.requires.join(', '));
     }
+    if (spec.tags.buildRequires.length > 0) {
+        buffer.add('BuildRequires: ' + spec.tags.buildRequires.join(', '));
+    }
     if (spec.tags.provides.length > 0) {
         buffer.add('Provides: ' + spec.tags.provides.join(', '));
     }
