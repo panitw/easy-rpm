@@ -417,7 +417,6 @@ An array of packages that this package depends on to build (e.g.
 `["systemd <= 222", "libpng-devel"]`).
 
 ### provides
-### provides
 `Array<String>`
 
 An array of virtual packages that this package provides.
