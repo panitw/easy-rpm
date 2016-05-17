@@ -84,6 +84,7 @@ describe('spec writer', function() {
             spec.tags.autoReq = false;
             spec.tags.autoProv = false;
             spec.addRequirements('quux > 1.6.9', 'k9 <= 2.0');
+            spec.tags.requires.push({'foo': ['bar = 1.2.3']});
             spec.addProvides('virtualeasyrpm = 0.0.1');
             spec.addConflicts('quux = 1.6.9', 'baz < 1.2');
             spec.addExcludeArchs('sparc', 'alpha');
