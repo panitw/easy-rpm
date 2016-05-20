@@ -414,6 +414,12 @@ Will add the following to the SPEC file:
 An array of packages that this package depends on (e.g.
 `["nodejs >= 0.10.22", "libpng"]`).
 
+### buildRequires
+`Array<String>`
+
+An array of packages that this package depends on to build (e.g.
+`["systemd <= 222", "libpng-devel"]`).
+
 ### provides
 `Array<String>`
 
