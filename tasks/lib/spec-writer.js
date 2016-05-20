@@ -163,6 +163,9 @@ module.exports = function(spec, callback) {
         });
         buffer.add('Requires: ' + plainRequires.join(', '));
     }
+    if (spec.tags.buildRequires.length > 0) {
+        buffer.add('BuildRequires: ' + spec.tags.buildRequires.join(', '));
+    }
     if (spec.tags.provides.length > 0) {
         buffer.add('Provides: ' + spec.tags.provides.join(', '));
     }
