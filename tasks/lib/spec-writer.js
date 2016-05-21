@@ -148,7 +148,23 @@ module.exports = function(spec, callback) {
     bufferTagIfExists(buffer, spec, 'packager', 'Packager');
 
     if (spec.tags.requires.length > 0) {
-        buffer.add('Requires: ' + spec.tags.requires.join(', '));
+        plainRequires = spec.tags.requires.filter(function(require) {
+            switch(typeof require) {
+                case 'string':
+                    return true;
+                case 'object':
+                    Object.keys(require).map(function(key) {
+                        buffer.add('Requires(' + key + '): ' + require[key].join(', '));
+                    });
+                    return false;
+                default:
+                    return false;
+            }
+        });
+        buffer.add('Requires: ' + plainRequires.join(', '));
+    }
+    if (spec.tags.buildRequires.length > 0) {
+        buffer.add('BuildRequires: ' + spec.tags.buildRequires.join(', '));
     }
     if (spec.tags.provides.length > 0) {
         buffer.add('Provides: ' + spec.tags.provides.join(', '));

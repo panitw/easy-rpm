@@ -67,6 +67,10 @@ grunt.initConfig({
 })
 ```
 
+If you are including [Node.js Addons](https://nodejs.org/api/addons.html),
+rpmbuild will add several require statements that you probably don't need.
+Consider setting [autoReq and autoProv](#autoreq-autoprov) to false.
+
 ## Usage Examples
 ### Basic Usage
 In this example, the default options are used for most of the fields. Each file
@@ -405,10 +409,18 @@ Will add the following to the SPEC file:
 ```
 
 ### requires
-`Array<String>`
+`Array<String|Object>`
 
 An array of packages that this package depends on (e.g.
-`["nodejs >= 0.10.22", "libpng"]`).
+`["nodejs >= 0.10.22", "libpng"]`). Can also include an object
+to map dependencies for scriptlets, e.g.
+`["nodejs >= 0.10.22", {"post": ["%{systemd_post_requires}"]}]`
+
+### buildRequires
+`Array<String>`
+
+An array of packages that this package depends on to build (e.g.
+`["systemd <= 222", "libpng-devel"]`).
 
 ### provides
 `Array<String>`

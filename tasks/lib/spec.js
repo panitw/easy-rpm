@@ -94,6 +94,17 @@ var Spec = function() {
         // even more specific, a package's release may be included as well.
         requires: [],
 
+        // The buildRequires tag is used to alert RPM to the fact that the
+        // package needs to have certain capabilities available in order to
+        // build properly. These capabilities refer to the name of another
+        // package, or to a virtual package provided by one or more packages
+        // that use the provides tag. When the requires tag references a
+        // package name, version comparisons may also be included by following
+        // the package name with <, >, =, >=, or <=, and a version
+        // specification. To get even more specific, a package's release may be
+        // included as well.
+        buildRequires: [],
+
         // The provides tag is used to alert RPM to the fact that the package
         // will provide a virtual package.
         provides: [],
@@ -265,6 +276,10 @@ Spec.prototype.addDefines = function() {
 
 Spec.prototype.addRequirements = function() {
     this._bulkArgAdd(this.tags.requires, arguments);
+};
+
+Spec.prototype.addBuildRequirements = function() {
+    this._bulkArgAdd(this.tags.buildRequires, arguments);
 };
 
 Spec.prototype.addProvides = function() {
