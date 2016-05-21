@@ -11,6 +11,7 @@ Vendor: EasyRPM Inc.
 URL: http://www.google.com/
 Group: Applications/Productivity
 Packager: Dr. Foo <foo@tardis.com>
+Requires(foo): bar = 1.2.3
 Requires: quux > 1.6.9, k9 <= 2.0
 BuildRequires: bar <= 1.2.3
 Provides: virtualeasyrpm = 0.0.1
