@@ -153,6 +153,9 @@ function applySpecSettings(grunt, options, spec) {
     if (_.has(options, 'provides')) {
         spec.addProvides.apply(spec, options.provides);
     }
+    if (_.has(options, 'obsoletes')) {
+        spec.addObsoletes.apply(spec, options.obsoletes);
+    }
 
     if (options.autoReq === false) {
         spec.tags.autoReq = options.autoReq;

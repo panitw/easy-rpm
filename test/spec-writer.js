@@ -88,6 +88,7 @@ describe('spec writer', function() {
             spec.tags.requires.push({'foo': ['bar = 1.2.3']});
             spec.addProvides('virtualeasyrpm = 0.0.1');
             spec.addConflicts('quux = 1.6.9', 'baz < 1.2');
+            spec.addObsoletes('foo', 'bar < 3.5');
             spec.addExcludeArchs('sparc', 'alpha');
             spec.addExclusiveArchs('x86', 'powerpc');
             spec.addExcludeOS('linux', 'irix');
