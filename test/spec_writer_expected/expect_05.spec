@@ -15,6 +15,7 @@ Requires(foo): bar = 1.2.3
 Requires: quux > 1.6.9, k9 <= 2.0
 BuildRequires: bar <= 1.2.3
 Provides: virtualeasyrpm = 0.0.1
+Obsoletes: foo, bar < 3.5
 Conflicts: quux = 1.6.9, baz < 1.2
 AutoReqProv: no
 ExcludeArch: sparc, alpha

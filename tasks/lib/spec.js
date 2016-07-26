@@ -109,6 +109,13 @@ var Spec = function() {
         // will provide a virtual package.
         provides: [],
 
+        // The obsoletes tag is used to alert RPM to the fact that the package
+        // makes another package obsolete. This is normally used when the name
+        // of a package is changed, such as the apache Web server changing it's
+        // name from apache to httpd. All packages listed in this array will be
+        // uninstalled.
+        obsoletes: [],
+
         // The conflicts tag is the logical complement to the requires tag. The
         // requires tag is used to specify what packages must be present in
         // order for the current package to operate properly. The conflicts tag
@@ -284,6 +291,10 @@ Spec.prototype.addBuildRequirements = function() {
 
 Spec.prototype.addProvides = function() {
     this._bulkArgAdd(this.tags.provides, arguments);
+};
+
+Spec.prototype.addObsoletes = function() {
+    this._bulkArgAdd(this.tags.obsoletes, arguments);
 };
 
 Spec.prototype.addConflicts = function() {

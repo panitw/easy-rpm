@@ -170,6 +170,10 @@ module.exports = function(spec, callback) {
         buffer.add('Provides: ' + spec.tags.provides.join(', '));
     }
 
+    if (spec.tags.obsoletes.length > 0) {
+        buffer.add('Obsoletes: ' + spec.tags.obsoletes.join(', '));
+    }
+
     if (spec.tags.conflicts.length > 0) {
         buffer.add('Conflicts: ' + spec.tags.conflicts.join(', '));
     }
