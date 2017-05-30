@@ -136,7 +136,7 @@ grunt.initConfig({
     release: {
       files: [
         {src: '*.txt', dest: '/opt/text', cwd: 'local/text'},
-        {src: 'image/*.png', dest: '/opt'}
+        {src: 'image/*.png', dest: '/opt/image'}
       ]
     }
   }
