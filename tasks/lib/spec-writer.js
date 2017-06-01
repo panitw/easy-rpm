@@ -148,7 +148,7 @@ module.exports = function(spec, callback) {
     bufferTagIfExists(buffer, spec, 'packager', 'Packager');
 
     if (spec.tags.requires.length > 0) {
-        plainRequires = spec.tags.requires.filter(function(require) {
+        var plainRequires = spec.tags.requires.filter(function(require) {
             switch(typeof require) {
                 case 'string':
                     return true;
