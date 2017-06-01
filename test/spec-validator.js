@@ -1,11 +1,11 @@
 /* jshint mocha:true */
 
 var assert = require('assert'),
-    rpmspec = require('../tasks/lib/spec'),
+    Rpmspec = require('../tasks/lib/spec'),
     specValidator = require('../tasks/lib/spec-validator');
 
 function validSpec() {
-    var spec = new rpmspec();
+    var spec = new Rpmspec();
 
     spec.tags.name = 'ValidName';
     spec.tags.version = '1.2.3';

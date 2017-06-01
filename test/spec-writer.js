@@ -2,7 +2,7 @@
 
 var assert = require('assert'),
     fs = require('fs'),
-    rpmspec = require('../tasks/lib/spec'),
+    Rpmspec = require('../tasks/lib/spec'),
     specWriter = require('../tasks/lib/spec-writer');
 
 function assertExpectedFile(result, expectFile, assertion) {
@@ -38,7 +38,7 @@ function writeAndAssertEqualsExpectedFile(spec, expectFile) {
 }
 
 function specWithMinimumTags() {
-    var spec = new rpmspec();
+    var spec = new Rpmspec();
     spec.tags.name = 'easyrpm';
     spec.tags.version = '0.0.1';
     spec.tags.release = 21;

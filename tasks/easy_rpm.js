@@ -355,6 +355,9 @@ module.exports = function(grunt) {
                     grunt.verbose.writeln("Copying: " + actualSrcPath);
                     preserveCopy(grunt, actualSrcPath, copyTargetPath);
                 } else {
+                    if (file.directoryExcluded && srcPath === '') {
+                        return false;
+                    }
                     grunt.verbose.writeln("Creating: " + actualSrcPath);
                     grunt.file.mkdir(copyTargetPath);
                     fileSpec.dir = true;

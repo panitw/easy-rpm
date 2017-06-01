@@ -290,6 +290,25 @@ grunt.initConfig({
 })
 ```
 
+### Writing into directories owned by other RPMs
+A `%dir` entry will be created for every directory included in the package.
+This may cause conflicts when writing to directories owned by other RPMs, e.g.
+`/etc`. To omit the `%dir` entry, set the `directoryExcluded` attribute to
+false.
+
+```js
+grunt.initConfig({
+  easy_rpm: {
+    options: {...}
+    release: {
+      files: [
+        {src: "package.conf", dest: "/etc", directoryExcluded: true}
+      ]
+    }
+  }
+});
+```
+
 ## SPEC Validations
 This task performs some minor validations on the options provided that result
 in SPEC file generation.  These validations are meant to be distribution
