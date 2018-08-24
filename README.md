@@ -601,6 +601,12 @@ package and does not affect the RPM itself.
 When `true`, will keep the temporary directory used to build the RPM after the
 it is built. This is useful for problem investigation.
 
+### debug
+`Boolean` (default: `false`)
+
+When `true`, will insert %debug_package macro into spec causing two rpm's to be created
+One with exe/dll and stripped the other with debug info
+
 ## Contributing
 For those interested in contributing to the project, there are a few simple
 guidelines to follow.
