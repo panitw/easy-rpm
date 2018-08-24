@@ -179,7 +179,11 @@ var Spec = function() {
         // omit something from the source package. In the case of nosource, that
         // "something" was one or more sources. For the nopatch tag, the
         // "something" is one or more patches.
-        noPatches: []
+        noPatches: [],
+        
+        // Added %debug_package to spec file
+        // Creates two rpm's, one with exe stripped, one with debug info
+        debug: null
     };
 
     this.scripts = {

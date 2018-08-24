@@ -241,6 +241,10 @@ function applySpecSettings(grunt, options, spec) {
         }
         spec.addChangelogs.apply(spec, changelog);
     }
+    
+    if (options.debug === true) {
+      spec.tags.debug = true;
+    }
 }
 
 module.exports = function(grunt) {

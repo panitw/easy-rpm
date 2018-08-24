@@ -237,6 +237,10 @@ module.exports = function(spec, callback) {
             .add(spec.tags.description);
     }
 
+    if (spec.tags.debug) {
+      buffer.add("%debug_package");
+    }
+    
     // Script sections.
     buffer.ensureEmptyLine();
     bufferDirectiveBlock(buffer, spec.scripts.prep, '%prep', true);
