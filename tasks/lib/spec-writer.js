@@ -174,6 +174,10 @@ module.exports = function(spec, callback) {
         buffer.add('Conflicts: ' + spec.tags.conflicts.join(', '));
     }
 
+    if (spec.tags.obsoletes.length > 0) {
+        buffer.add('Obsoletes: ' + spec.tags.obsoletes.join(', '));
+    }
+
     if (spec.tags.autoReq === false && spec.tags.autoProv === false) {
         buffer.add('AutoReqProv: no');
     } else if (spec.tags.autoReq === false) {

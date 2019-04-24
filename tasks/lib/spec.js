@@ -115,6 +115,10 @@ var Spec = function() {
         // is used to specify what packages cannot be installed if the current
         // package is to operate properly.
         conflicts: [],
+        
+        // The pourpose of the "Obsoletes" tag is to mark an obsoletion if the
+        // package name differs.
+        obsoletes: [],
 
         // The autoreqprov, autoreq, and autoprov tags are used to control the
         // automatic dependency processing performed when the package is being
@@ -288,6 +292,10 @@ Spec.prototype.addProvides = function() {
 
 Spec.prototype.addConflicts = function() {
     this._bulkArgAdd(this.tags.conflicts, arguments);
+};
+
+Spec.prototype.addObsoletes = function() {
+    this._bulkArgAdd(this.tags.obsoletes, arguments);
 };
 
 Spec.prototype.addExcludeArchs = function() {

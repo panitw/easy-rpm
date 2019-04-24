@@ -433,6 +433,12 @@ An array of virtual packages that this package provides.
 An array of packages that this package conflicts with (e.g.
 `["cobol", "sparta > 300"]`).
 
+### obsoletes
+`Array<String>`
+
+An array of packages that this package obsoletes (e.g.
+`["myoldname"]`).
+
 ### dependencies (deprecated)
 `Array<String>`
 
